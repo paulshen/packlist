@@ -1,0 +1,3 @@
+rootProject.name = 'Pack'
+
+include ':app'
