@@ -24,6 +24,11 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		9C7ACF201DE838490068CCBB /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C7ACF1F1DE838270068CCBB /* libRCTAnimation.a */; };
+		9C7ACF271DE8C9D10068CCBB /* SF-UI-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C7ACF221DE8C9D10068CCBB /* SF-UI-Text-Bold.otf */; };
+		9C7ACF281DE8C9D10068CCBB /* SF-UI-Text-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C7ACF231DE8C9D10068CCBB /* SF-UI-Text-Light.otf */; };
+		9C7ACF291DE8C9D10068CCBB /* SF-UI-Text-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C7ACF241DE8C9D10068CCBB /* SF-UI-Text-Medium.otf */; };
+		9C7ACF2A1DE8C9D10068CCBB /* SF-UI-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C7ACF251DE8C9D10068CCBB /* SF-UI-Text-Regular.otf */; };
+		9C7ACF2B1DE8C9D10068CCBB /* SF-UI-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C7ACF261DE8C9D10068CCBB /* SF-UI-Text-Semibold.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -200,6 +205,11 @@
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		9C7ACEEC1DE832630068CCBB /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		9C7ACF1A1DE838270068CCBB /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../../react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
+		9C7ACF221DE8C9D10068CCBB /* SF-UI-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Bold.otf"; path = "../../../Library/Fonts/SF-UI-Text-Bold.otf"; sourceTree = "<group>"; };
+		9C7ACF231DE8C9D10068CCBB /* SF-UI-Text-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Light.otf"; path = "../../../Library/Fonts/SF-UI-Text-Light.otf"; sourceTree = "<group>"; };
+		9C7ACF241DE8C9D10068CCBB /* SF-UI-Text-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Medium.otf"; path = "../../../Library/Fonts/SF-UI-Text-Medium.otf"; sourceTree = "<group>"; };
+		9C7ACF251DE8C9D10068CCBB /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Regular.otf"; path = "../../../Library/Fonts/SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
+		9C7ACF261DE8C9D10068CCBB /* SF-UI-Text-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Semibold.otf"; path = "../../../Library/Fonts/SF-UI-Text-Semibold.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -312,6 +322,7 @@
 		13B07FAE1A68108700A75B9A /* Pack */ = {
 			isa = PBXGroup;
 			children = (
+				9C7ACF211DE8C9980068CCBB /* Fonts */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -413,6 +424,18 @@
 				9C7ACF1F1DE838270068CCBB /* libRCTAnimation.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9C7ACF211DE8C9980068CCBB /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				9C7ACF221DE8C9D10068CCBB /* SF-UI-Text-Bold.otf */,
+				9C7ACF231DE8C9D10068CCBB /* SF-UI-Text-Light.otf */,
+				9C7ACF241DE8C9D10068CCBB /* SF-UI-Text-Medium.otf */,
+				9C7ACF251DE8C9D10068CCBB /* SF-UI-Text-Regular.otf */,
+				9C7ACF261DE8C9D10068CCBB /* SF-UI-Text-Semibold.otf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -693,7 +716,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C7ACF2B1DE8C9D10068CCBB /* SF-UI-Text-Semibold.otf in Resources */,
+				9C7ACF271DE8C9D10068CCBB /* SF-UI-Text-Bold.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				9C7ACF2A1DE8C9D10068CCBB /* SF-UI-Text-Regular.otf in Resources */,
+				9C7ACF281DE8C9D10068CCBB /* SF-UI-Text-Light.otf in Resources */,
+				9C7ACF291DE8C9D10068CCBB /* SF-UI-Text-Medium.otf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

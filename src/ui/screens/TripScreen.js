@@ -1,14 +1,16 @@
 /* @flow */
 
 import React from 'react';
-import { Button, Keyboard, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, Keyboard, StyleSheet, TextInput, View } from 'react-native';
+
+import { UIText } from '../components/Core';
 
 type Item = { text: string };
 
 function ItemRow({ item }: { item: Item }) {
   return (
     <View style={Styles.ItemRow}>
-      <Text style={Styles.ItemText}>{item.text}</Text>
+      <UIText size="18">{item.text}</UIText>
     </View>
   );
 }
@@ -71,18 +73,11 @@ const Styles = StyleSheet.create({
     height: 52,
     paddingLeft: 34,
   },
-  ItemText: {
-    color: '#000000',
-    fontFamily: 'System',
-    fontSize: 18,
-    fontWeight: '400',
-  },
   AddInput: {
     color: '#000000',
     flex: 1,
-    fontFamily: 'System',
+    fontFamily: 'SFUIText-Regular',
     fontSize: 18,
-    fontWeight: '400',
     height: 32,
     top: 9,
   },
