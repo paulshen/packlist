@@ -1,16 +1,27 @@
 /* @flow */
 
 import React from 'react';
-import { Button, Keyboard, StyleSheet, TextInput, View } from 'react-native';
+import { Button, Keyboard, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
+import { Colors, Fonts } from '../Constants';
 import { UIText } from '../components/Core';
 
 type Item = { text: string };
 
-function ItemRow({ item }: { item: Item }) {
+function ItemRow({ item, onPress }) {
+  let strike;
+  if (item.checked) {
+    strike = <View style={Styles.Strike} />;
+  }
+
   return (
     <View style={Styles.ItemRow}>
-      <UIText size="18">{item.text}</UIText>
+      <View>
+        <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
+          <UIText size="18">{item.text}</UIText>
+          {strike}
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -43,18 +54,29 @@ export default class TripScreen extends React.Component {
     Keyboard.dismiss();
   };
 
+  _onItemPress = (item) => {
+    // hacky
+    item.checked = !item.checked;
+    this.setState({ items: this.state.items });
+  };
+
   render() {
     return (
       <View style={Styles.Root}>
         <View style={Styles.ItemRow}>
           <TextInput
+            placeholder="Add item"
             onChangeText={this._onChangeNewItemText}
             value={this.state.newItemText}
             style={Styles.AddInput}
           />
-          <Button title="Add" onPress={this._addItem} />
+          {this.state.newItemText ?
+            <Button title="Add" onPress={this._addItem} />
+          : null}
         </View>
-        {this.state.items.map((item, i) => <ItemRow item={item} key={i} />)}
+        {this.state.items.map((item, i) => (
+          <ItemRow item={item} key={i} onPress={() => this._onItemPress(item)} />
+        ))}
       </View>
     );
   }
@@ -71,14 +93,22 @@ const Styles = StyleSheet.create({
     borderBottomColor: '#f6f6f6',
     flexDirection: 'row',
     height: 52,
-    paddingLeft: 34,
+    marginLeft: 34,
   },
   AddInput: {
-    color: '#000000',
+    ...Fonts.Regular,
+    color: Colors.Black,
     flex: 1,
-    fontFamily: 'SFUIText-Regular',
     fontSize: 18,
     height: 32,
     top: 9,
+  },
+  Strike: {
+    backgroundColor: 'blue',
+    left: -20,
+    height: 2,
+    position: 'absolute',
+    right: -40,
+    top: 10,
   },
 });
