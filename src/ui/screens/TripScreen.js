@@ -106,6 +106,13 @@ export default class TripScreen extends React.Component {
     Keyboard.dismiss();
   };
 
+  _onCancelAddPress = () => {
+    this.setState({
+      newItemText: '',
+    });
+    Keyboard.dismiss();
+  };
+
   _onItemPress = (item: Item) => {
     let unchecked = this.state.items.filter(i => i !== item && !i.checked);
     let checked = this.state.items.filter(i => i !== item && i.checked);
@@ -118,29 +125,24 @@ export default class TripScreen extends React.Component {
     let uncheckedItems = this.state.items.filter(i => !i.checked);
     let checkedItems = this.state.items.filter(i => i.checked);
 
-    let checkedSectionHeader;
-    if (checkedItems.length > 0) {
-      checkedSectionHeader =
-        <Row y={52 * (uncheckedItems.length + 1)}>
-          <View style={{flex: 1, justifyContent: 'center'}}>
-            <UIText>Packed</UIText>
-          </View>
-        </Row>;
-    }
-
     return (
       <View style={Styles.Root}>
         <View>
           <View style={Styles.Row}>
-            <TextInput
-              placeholder="Add item"
-              onChangeText={this._onChangeNewItemText}
-              value={this.state.newItemText}
-              style={Styles.AddInput}
-            />
-            {this.state.newItemText ?
-              <Button title="Add" onPress={this._addItem} />
-            : null}
+            <View style={[Styles.ItemRow, Styles.AddItemRow]}>
+              <TextInput
+                placeholder="Add item"
+                onChangeText={this._onChangeNewItemText}
+                onSubmitEditing={this._addItem}
+                value={this.state.newItemText}
+                returnKeyType="go"
+                enablesReturnKeyAutomatically={true}
+                style={Styles.AddInput}
+              />
+              {this.state.newItemText ?
+                <Button title="Cancel" onPress={this._onCancelAddPress} />
+              : null}
+            </View>
           </View>
           {this.state.items.map((item, i) => {
             let y;
@@ -155,7 +157,6 @@ export default class TripScreen extends React.Component {
               </Row>
             );
           })}
-          {checkedSectionHeader}
         </View>
       </View>
     );
@@ -179,6 +180,10 @@ const Styles = StyleSheet.create({
     borderBottomColor: '#f6f6f6',
     flex: 1,
     flexDirection: 'row',
+    marginLeft: 34,
+  },
+  AddItemRow: {
+    paddingRight: 20,
   },
   AddInput: {
     ...Fonts.Regular,
