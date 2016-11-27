@@ -1,14 +1,14 @@
 /* @flow */
 
 import React from 'react';
-import { Button, Keyboard, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, Button, Keyboard, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { Colors, Fonts } from '../Constants';
 import { UIText } from '../components/Core';
 
-type Item = { text: string };
+type Item = { id: number, checked?: boolean, text: string };
 
-function ItemRow({ item, onPress }) {
+function ItemRow({ item, onPress }: { item: Item, onPress: Function }) {
   let strike;
   if (item.checked) {
     strike = <View style={Styles.Strike} />;
@@ -26,13 +26,63 @@ function ItemRow({ item, onPress }) {
   );
 }
 
+class Row extends React.Component {
+  props: {
+    children?: any,
+    y: number,
+  };
+
+  state: {
+    prevY: number,
+    yAnimation: Animated.Value,
+  };
+
+  constructor(props) {
+    super();
+    this.state = {
+      prevY: props.y,
+      yAnimation: new Animated.Value(0),
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.y !== this.props.y) {
+      this.setState({
+        prevY: this.props.y,
+        yAnimation: new Animated.Value(0),
+      }, () => {
+        Animated.timing(this.state.yAnimation, {
+          toValue: 1,
+          duration: 200,
+        }).start();
+      });
+    }
+  }
+
+  render() {
+    return (
+      <Animated.View style={[Styles.Row, {
+        top: this.state.yAnimation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [this.state.prevY, this.props.y],
+        }),
+      }]}>
+        {this.props.children}
+      </Animated.View>
+    );
+  }
+}
+
 export default class TripScreen extends React.Component {
-  state = {
+  state: {
+    items: Item[],
+    newItemText: string,
+  } = {
     items: [
-      { text: 'Toothbrush' },
-      { text: 'Toothpaste' },
-      { text: 'Contacts' },
-      { text: 'Contact solution' },
+      { id: 10, text: 'Toothbrush' },
+      { id: 11, text: 'Toothpaste' },
+      { id: 12, text: 'Contacts' },
+      { id: 13, text: 'Contact solution' },
     ],
     newItemText: '',
   };
@@ -44,7 +94,9 @@ export default class TripScreen extends React.Component {
   };
 
   _addItem = () => {
+    let nextId = Math.max.apply(null, this.state.items.map(item => item.id)) + 1;
     let newItem = {
+      id: nextId,
       text: this.state.newItemText,
     };
     this.setState({
@@ -54,29 +106,57 @@ export default class TripScreen extends React.Component {
     Keyboard.dismiss();
   };
 
-  _onItemPress = (item) => {
-    // hacky
+  _onItemPress = (item: Item) => {
+    let unchecked = this.state.items.filter(i => i !== item && !i.checked);
+    let checked = this.state.items.filter(i => i !== item && i.checked);
+
     item.checked = !item.checked;
-    this.setState({ items: this.state.items });
+    this.setState({ items: [...unchecked, item, ...checked] });
   };
 
   render() {
+    let uncheckedItems = this.state.items.filter(i => !i.checked);
+    let checkedItems = this.state.items.filter(i => i.checked);
+
+    let checkedSectionHeader;
+    if (checkedItems.length > 0) {
+      checkedSectionHeader =
+        <Row y={52 * (uncheckedItems.length + 1)}>
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <UIText>Packed</UIText>
+          </View>
+        </Row>;
+    }
+
     return (
       <View style={Styles.Root}>
-        <View style={Styles.ItemRow}>
-          <TextInput
-            placeholder="Add item"
-            onChangeText={this._onChangeNewItemText}
-            value={this.state.newItemText}
-            style={Styles.AddInput}
-          />
-          {this.state.newItemText ?
-            <Button title="Add" onPress={this._addItem} />
-          : null}
+        <View>
+          <View style={Styles.Row}>
+            <TextInput
+              placeholder="Add item"
+              onChangeText={this._onChangeNewItemText}
+              value={this.state.newItemText}
+              style={Styles.AddInput}
+            />
+            {this.state.newItemText ?
+              <Button title="Add" onPress={this._addItem} />
+            : null}
+          </View>
+          {this.state.items.map((item, i) => {
+            let y;
+            if (!item.checked) {
+              y = 52 * (uncheckedItems.indexOf(item) + 1);
+            } else {
+              y = 52 * (uncheckedItems.length + checkedItems.indexOf(item) + 2);
+            }
+            return (
+              <Row y={y} key={item.id}>
+                <ItemRow item={item} onPress={() => this._onItemPress(item)} />
+              </Row>
+            );
+          })}
+          {checkedSectionHeader}
         </View>
-        {this.state.items.map((item, i) => (
-          <ItemRow item={item} key={i} onPress={() => this._onItemPress(item)} />
-        ))}
       </View>
     );
   }
@@ -87,13 +167,18 @@ const Styles = StyleSheet.create({
     flex: 1,
     paddingTop: 100,
   },
+  Row: {
+    height: 52,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+  },
   ItemRow: {
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#f6f6f6',
+    flex: 1,
     flexDirection: 'row',
-    height: 52,
-    marginLeft: 34,
   },
   AddInput: {
     ...Fonts.Regular,
