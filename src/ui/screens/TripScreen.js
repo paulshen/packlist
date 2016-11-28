@@ -179,7 +179,7 @@ const Styles = StyleSheet.create({
   ItemRow: {
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#f6f6f6',
+    borderBottomColor: Colors.LightGrayBorder,
     flex: 1,
     flexDirection: 'row',
     marginLeft: 34,

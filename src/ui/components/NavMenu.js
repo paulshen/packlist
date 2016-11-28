@@ -14,6 +14,14 @@ const ButtonPosition = {
 };
 const AnimateDistance = WindowHeight - ButtonPosition.bottom - ButtonPosition.height;
 
+function MenuRow({ children }: { children?: any }) {
+  return (
+    <View style={Styles.MenuRow}>
+      <UIText size="18">{children}</UIText>
+    </View>
+  );
+}
+
 export default class NavMenu extends React.Component {
   state = {
     open: false,
@@ -24,11 +32,12 @@ export default class NavMenu extends React.Component {
   _onButtonPress = () => {
     this.setState({
       open: !this.state.open,
+    }, () => {
+      Animated.timing(this._openAnim, {
+        toValue: this.state.open ? 1 : 0,
+        duration: 200,
+      }).start();
     });
-    Animated.timing(this._openAnim, {
-      toValue: this.state.open ? 1 : 0,
-      duration: 200,
-    }).start();
   };
 
   render() {
@@ -57,8 +66,18 @@ export default class NavMenu extends React.Component {
           onPress={this._onButtonPress}
           style={Styles.Button}>
           <View style={Styles.ButtonIcon} />
-          <UIText color="white" size="14" weight="medium" style={{backgroundColor: 'transparent'}}>Change trip</UIText>
+          <UIText color="white" size="14" weight="medium" style={Styles.ButtonText}>Change trip</UIText>
         </TouchableOpacity>
+        <Animated.View style={[Styles.Menu, {
+          opacity: this._openAnim,
+        }]} pointerEvents={this.state.open ? 'auto' : 'none'}>
+          <MenuRow>Sample camping trip</MenuRow>
+          <MenuRow>Copenhagen</MenuRow>
+          <MenuRow>Japan</MenuRow>
+          <View style={[Styles.MenuRow, Styles.MenuLastRow]}>
+            <UIText size="18">New trip</UIText>
+          </View>
+        </Animated.View>
       </View>
     );
   }
@@ -94,5 +113,27 @@ const Styles = StyleSheet.create({
     height: 30,
     marginRight: 10,
     width: 30,
+  },
+  ButtonText: {
+    backgroundColor: 'transparent'
+  },
+  Menu: {
+    backgroundColor: Colors.White,
+    borderRadius: 10,
+    bottom: 100,
+    left: ButtonPosition.left,
+    right: 24,
+    position: 'absolute',
+  },
+  MenuRow: {
+    alignItems: 'center',
+    borderBottomColor: Colors.LightGrayBorder,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    height: 52,
+    marginLeft: 24,
+  },
+  MenuLastRow: {
+    borderBottomWidth: 0,
   },
 });
