@@ -6,9 +6,11 @@ import { Colors, Fonts } from '../../Constants';
 
 const SUPPORTED_COLORS = {
   black: Colors.Black,
+  white: Colors.White,
 };
 
 const SUPPORTED_FONT_SIZES = {
+  '14': 14,
   '18': 18,
 };
 

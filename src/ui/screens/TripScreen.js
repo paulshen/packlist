@@ -5,6 +5,7 @@ import { Animated, Button, Keyboard, StyleSheet, TextInput, TouchableOpacity, Vi
 
 import { Colors, Fonts } from '../Constants';
 import { UIText } from '../components/Core';
+import NavMenu from '../components/NavMenu';
 
 type Item = { id: number, checked?: boolean, text: string };
 
@@ -158,6 +159,7 @@ export default class TripScreen extends React.Component {
             );
           })}
         </View>
+        <NavMenu />
       </View>
     );
   }
