@@ -124,6 +124,10 @@ const Styles = StyleSheet.create({
     left: ButtonPosition.left,
     right: 24,
     position: 'absolute',
+    shadowColor: '#000000',
+    shadowOffset: { x: 0, y: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
   },
   MenuRow: {
     alignItems: 'center',
