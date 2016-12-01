@@ -26,7 +26,7 @@ function MenuRow({ children, onPress }: { children?: any, onPress?: Function }) 
 
 export default class NavMenu extends React.Component {
   props: {
-    onTripChange: (trip: Object) => void,
+    onTripChange: (tripId: string) => void,
   };
 
   state = {
@@ -50,10 +50,8 @@ export default class NavMenu extends React.Component {
     });
   };
 
-  _onTripPress = (tripName) => {
-    this.props.onTripChange({
-      name: tripName,
-    });
+  _onTripPress = (tripId) => {
+    this.props.onTripChange(tripId);
     this.setState({
       open: false,
     });
@@ -90,9 +88,8 @@ export default class NavMenu extends React.Component {
         <Animated.View style={[Styles.Menu, {
           opacity: this._openAnim,
         }]} pointerEvents={this.state.open ? 'auto' : 'none'}>
-          <MenuRow onPress={() => this._onTripPress('Sample camping trip')}>Sample camping trip</MenuRow>
-          <MenuRow onPress={() => this._onTripPress('Copenhagen')}>Copenhagen</MenuRow>
-          <MenuRow onPress={() => this._onTripPress('Japan')}>Japan</MenuRow>
+          <MenuRow onPress={() => this._onTripPress('ee8566f4-ea1f-4289-bb5e-75f974611ecf')}>Copenhagen</MenuRow>
+          <MenuRow onPress={() => this._onTripPress('a6328be7-399f-455d-b642-4f20c285a305')}>Japan</MenuRow>
           <View style={[Styles.MenuRow, Styles.MenuLastRow]}>
             <UIText size="18">New trip</UIText>
           </View>

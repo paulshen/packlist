@@ -2,9 +2,11 @@
 
 import React from 'react';
 import { Animated, Button, Keyboard, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { connect } from 'react-redux';
 
 import { Colors, Fonts } from '../Constants';
 import { UIText } from '../components/Core';
+import trips from '../../redux/trips';
 
 type Item = { id: number, checked?: boolean, text: string };
 
@@ -73,7 +75,7 @@ class Row extends React.Component {
   }
 }
 
-export default class TripScreen extends React.Component {
+class TripScreen extends React.Component {
   props: {
     trip: Object,
   };
@@ -81,15 +83,15 @@ export default class TripScreen extends React.Component {
   state: {
     items: Item[],
     newItemText: string,
-  } = {
-    items: [
-      { id: 10, text: 'Toothbrush' },
-      { id: 11, text: 'Toothpaste' },
-      { id: 12, text: 'Contacts' },
-      { id: 13, text: 'Contact solution' },
-    ],
-    newItemText: '',
   };
+
+  constructor(props: $PropertyType<TripScreen, 'props'>) {
+    super();
+    this.state = {
+      items: props.trip.items,
+      newItemText: '',
+    };
+  }
 
   _onChangeNewItemText = (text) => {
     this.setState({
@@ -169,6 +171,10 @@ export default class TripScreen extends React.Component {
     );
   }
 }
+TripScreen = connect((state, ownProps) => ({
+  trip: trips.selectors.getTrip(state, ownProps.tripId),
+}))(TripScreen);
+export default TripScreen;
 
 const Styles = StyleSheet.create({
   Root: {
