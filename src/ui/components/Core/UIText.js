@@ -12,6 +12,7 @@ const SUPPORTED_COLORS = {
 const SUPPORTED_FONT_SIZES = {
   '14': 14,
   '18': 18,
+  '24': 24,
 };
 
 export default function UIText({ color, size, style, weight, ...props }: {

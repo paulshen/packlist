@@ -5,7 +5,6 @@ import { Animated, Button, Keyboard, StyleSheet, TextInput, TouchableOpacity, Vi
 
 import { Colors, Fonts } from '../Constants';
 import { UIText } from '../components/Core';
-import NavMenu from '../components/NavMenu';
 
 type Item = { id: number, checked?: boolean, text: string };
 
@@ -75,6 +74,10 @@ class Row extends React.Component {
 }
 
 export default class TripScreen extends React.Component {
+  props: {
+    trip: Object,
+  };
+
   state: {
     items: Item[],
     newItemText: string,
@@ -128,6 +131,9 @@ export default class TripScreen extends React.Component {
 
     return (
       <View style={Styles.Root}>
+        <View style={Styles.Header}>
+          <UIText size="24" weight="semibold">{this.props.trip.name}</UIText>
+        </View>
         <View>
           <View style={Styles.Row}>
             <View style={[Styles.ItemRow, Styles.AddItemRow]}>
@@ -148,9 +154,9 @@ export default class TripScreen extends React.Component {
           {this.state.items.map((item, i) => {
             let y;
             if (!item.checked) {
-              y = 52 * (uncheckedItems.indexOf(item) + 1);
+              y = 50 * (uncheckedItems.indexOf(item) + 1);
             } else {
-              y = 52 * (uncheckedItems.length + checkedItems.indexOf(item) + 2);
+              y = 50 * (uncheckedItems.length + checkedItems.indexOf(item) + 2);
             }
             return (
               <Row y={y} key={item.id}>
@@ -159,7 +165,6 @@ export default class TripScreen extends React.Component {
             );
           })}
         </View>
-        <NavMenu />
       </View>
     );
   }
@@ -168,10 +173,14 @@ export default class TripScreen extends React.Component {
 const Styles = StyleSheet.create({
   Root: {
     flex: 1,
-    paddingTop: 100,
+  },
+  Header: {
+    alignItems: 'center',
+    paddingTop: 70,
+    paddingBottom: 40,
   },
   Row: {
-    height: 52,
+    height: 50,
     left: 0,
     position: 'absolute',
     right: 0,

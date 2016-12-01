@@ -14,29 +14,48 @@ const ButtonPosition = {
 };
 const AnimateDistance = WindowHeight - ButtonPosition.bottom - ButtonPosition.height;
 
-function MenuRow({ children }: { children?: any }) {
+function MenuRow({ children, onPress }: { children?: any, onPress?: Function }) {
   return (
     <View style={Styles.MenuRow}>
-      <UIText size="18">{children}</UIText>
+      <TouchableOpacity onPress={onPress} style={Styles.MenuRowTouchable}>
+        <UIText size="18">{children}</UIText>
+      </TouchableOpacity>
     </View>
   );
 }
 
 export default class NavMenu extends React.Component {
+  props: {
+    onTripChange: (trip: Object) => void,
+  };
+
   state = {
     open: false,
   };
 
   _openAnim = new Animated.Value(0);
 
-  _onButtonPress = () => {
-    this.setState({
-      open: !this.state.open,
-    }, () => {
+  componentDidUpdate(prevProps: $PropertyType<NavMenu, 'props'>, prevState: $PropertyType<NavMenu, 'state'>) {
+    if (this.state.open !== prevState.open) {
       Animated.timing(this._openAnim, {
         toValue: this.state.open ? 1 : 0,
         duration: 200,
       }).start();
+    }
+  }
+
+  _onButtonPress = () => {
+    this.setState({
+      open: !this.state.open,
+    });
+  };
+
+  _onTripPress = (tripName) => {
+    this.props.onTripChange({
+      name: tripName,
+    });
+    this.setState({
+      open: false,
     });
   };
 
@@ -71,9 +90,9 @@ export default class NavMenu extends React.Component {
         <Animated.View style={[Styles.Menu, {
           opacity: this._openAnim,
         }]} pointerEvents={this.state.open ? 'auto' : 'none'}>
-          <MenuRow>Sample camping trip</MenuRow>
-          <MenuRow>Copenhagen</MenuRow>
-          <MenuRow>Japan</MenuRow>
+          <MenuRow onPress={() => this._onTripPress('Sample camping trip')}>Sample camping trip</MenuRow>
+          <MenuRow onPress={() => this._onTripPress('Copenhagen')}>Copenhagen</MenuRow>
+          <MenuRow onPress={() => this._onTripPress('Japan')}>Japan</MenuRow>
           <View style={[Styles.MenuRow, Styles.MenuLastRow]}>
             <UIText size="18">New trip</UIText>
           </View>
@@ -130,12 +149,16 @@ const Styles = StyleSheet.create({
     shadowRadius: 16,
   },
   MenuRow: {
-    alignItems: 'center',
     borderBottomColor: Colors.LightGrayBorder,
     borderBottomWidth: 1,
-    flexDirection: 'row',
     height: 52,
+    justifyContent: 'center',
     marginLeft: 24,
+  },
+  MenuRowTouchable: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
   },
   MenuLastRow: {
     borderBottomWidth: 0,
