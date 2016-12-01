@@ -92,7 +92,7 @@ class TripScreen extends React.Component {
   };
 
   _addItem = () => {
-    let nextId = Math.max.apply(null, this.props.trip.items.map(item => item.id)) + 1;
+    let nextId = Math.max.apply(null, [...this.props.trip.items.map(item => item.id), 0]) + 1;
     let newItem = {
       id: nextId,
       text: this.state.newItemText,
