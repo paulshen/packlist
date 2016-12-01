@@ -78,20 +78,12 @@ class Row extends React.Component {
 class TripScreen extends React.Component {
   props: {
     trip: Object,
+    setTripItems: (items: any) => void,
   };
 
-  state: {
-    items: Item[],
-    newItemText: string,
+  state = {
+    newItemText: '',
   };
-
-  constructor(props: $PropertyType<TripScreen, 'props'>) {
-    super();
-    this.state = {
-      items: props.trip.items,
-      newItemText: '',
-    };
-  }
 
   _onChangeNewItemText = (text) => {
     this.setState({
@@ -100,13 +92,13 @@ class TripScreen extends React.Component {
   };
 
   _addItem = () => {
-    let nextId = Math.max.apply(null, this.state.items.map(item => item.id)) + 1;
+    let nextId = Math.max.apply(null, this.props.trip.items.map(item => item.id)) + 1;
     let newItem = {
       id: nextId,
       text: this.state.newItemText,
     };
+    this.props.setTripItems([newItem, ...this.props.trip.items]);
     this.setState({
-      items: [newItem, ...this.state.items],
       newItemText: '',
     });
     Keyboard.dismiss();
@@ -120,16 +112,19 @@ class TripScreen extends React.Component {
   };
 
   _onItemPress = (item: Item) => {
-    let unchecked = this.state.items.filter(i => i !== item && !i.checked);
-    let checked = this.state.items.filter(i => i !== item && i.checked);
+    let unchecked = this.props.trip.items.filter(i => i !== item && !i.checked);
+    let checked = this.props.trip.items.filter(i => i !== item && i.checked);
 
-    item.checked = !item.checked;
-    this.setState({ items: [...unchecked, item, ...checked] });
+    this.props.setTripItems([
+      ...unchecked,
+      { ...item, checked: !item.checked },
+      ...checked,
+    ]);
   };
 
   render() {
-    let uncheckedItems = this.state.items.filter(i => !i.checked);
-    let checkedItems = this.state.items.filter(i => i.checked);
+    let uncheckedItems = this.props.trip.items.filter(i => !i.checked);
+    let checkedItems = this.props.trip.items.filter(i => i.checked);
 
     return (
       <View style={Styles.Root}>
@@ -153,7 +148,7 @@ class TripScreen extends React.Component {
               : null}
             </View>
           </View>
-          {this.state.items.map((item, i) => {
+          {this.props.trip.items.map((item, i) => {
             let y;
             if (!item.checked) {
               y = 50 * (uncheckedItems.indexOf(item) + 1);
@@ -173,6 +168,8 @@ class TripScreen extends React.Component {
 }
 TripScreen = connect((state, ownProps) => ({
   trip: trips.selectors.getTrip(state, ownProps.tripId),
+}), (dispatch, ownProps) => ({
+  setTripItems: (items) => dispatch(trips.actions.setTripItems(ownProps.tripId, items)),
 }))(TripScreen);
 export default TripScreen;
 

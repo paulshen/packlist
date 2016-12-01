@@ -25,7 +25,7 @@ export default function trips(state: any = InitialState, action: any) {
   case t.SET_TRIP_ITEMS:
     return {
       ...state,
-      tripId: {
+      [action.tripId]: {
         ...state[action.tripId],
         items: action.items,
       },
