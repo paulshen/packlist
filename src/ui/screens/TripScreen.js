@@ -10,7 +10,7 @@ import trips from '../../redux/trips';
 
 type Item = { id: number, checked?: boolean, text: string };
 
-function ItemRow({ item, onPress }: { item: Item, onPress: Function }) {
+function ItemRow({ item, onPress, onLongPress }: { item: Item, onPress: Function, onLongPress: Function }) {
   let strike;
   if (item.checked) {
     strike = <View style={Styles.Strike} />;
@@ -19,7 +19,7 @@ function ItemRow({ item, onPress }: { item: Item, onPress: Function }) {
   return (
     <View style={Styles.ItemRow}>
       <View>
-        <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
+        <TouchableOpacity onPress={onPress} onLongPress={onLongPress} activeOpacity={0.6}>
           <UIText size="18">{item.text}</UIText>
           {strike}
         </TouchableOpacity>
@@ -127,6 +127,10 @@ class TripScreen extends React.Component {
     ]);
   };
 
+  _onItemLongPress = (item: Item) => {
+    this.props.setTripItems(this.props.trip.items.filter(i => i !== item));
+  };
+
   render() {
     let uncheckedItems = this.props.trip.items.filter(i => !i.checked);
     let checkedItems = this.props.trip.items.filter(i => i.checked);
@@ -166,7 +170,11 @@ class TripScreen extends React.Component {
             }
             return (
               <Row y={y} key={item.id}>
-                <ItemRow item={item} onPress={() => this._onItemPress(item)} />
+                <ItemRow
+                  item={item}
+                  onPress={() => this._onItemPress(item)}
+                  onLongPress={() => this._onItemLongPress(item)}
+                />
               </Row>
             );
           })}
