@@ -24,7 +24,7 @@ export default class App extends React.Component {
       <Provider store={Store}>
         <View style={{ flex: 1 }}>
           {this.state.selectedTripId && <TripScreen tripId={this.state.selectedTripId} key={this.state.selectedTripId} />}
-          <NavMenu onTripChange={this._onTripChange} />
+          <NavMenu selectedTripId={this.state.selectedTripId} onTripChange={this._onTripChange} />
         </View>
       </Provider>
     );

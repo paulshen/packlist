@@ -141,6 +141,7 @@ class TripScreen extends React.Component {
           <TextInput
             value={this.props.trip.name}
             onChangeText={this._onChangeTitleText}
+            placeholder="Name your trip"
             style={Styles.HeaderInput}
           />
         </View>

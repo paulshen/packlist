@@ -21,6 +21,18 @@ export default function trips(state: any = InitialState, action: any) {
         items: action.items,
       },
     };
+  case t.CREATE_TRIP:
+    return {
+      ...state,
+      [action.tripId]: {
+        name: '',
+        items: [],
+      },
+    };
+  case t.REMOVE_TRIP:
+    let newState = { ...state };
+    delete newState[action.tripId];
+    return newState;
   default:
     return state;
   }

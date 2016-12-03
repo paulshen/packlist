@@ -16,10 +16,10 @@ const ButtonPosition = {
 };
 const AnimateDistance = WindowHeight - ButtonPosition.bottom - ButtonPosition.height;
 
-function MenuRow({ children, onPress }: { children?: any, onPress?: Function }) {
+function MenuRow({ children, onPress, onLongPress }: { children?: any, onPress?: Function, onLongPress?: Function }) {
   return (
     <View style={Styles.MenuRow}>
-      <TouchableOpacity onPress={onPress} style={Styles.MenuRowTouchable}>
+      <TouchableOpacity onPress={onPress} onLongPress={onLongPress} style={Styles.MenuRowTouchable}>
         <UIText size="18">{children}</UIText>
       </TouchableOpacity>
     </View>
@@ -28,8 +28,11 @@ function MenuRow({ children, onPress }: { children?: any, onPress?: Function }) 
 
 class NavMenu extends React.Component {
   props: {
-    onTripChange: (tripId: string) => void,
+    createTrip: () => Promise<string>,
+    removeTrip: (tripId: string) => void,
+    onTripChange: (tripId: ?string) => void,
     trips: { [tripId: string]: Object },
+    selectedTripId: ?string,
   };
 
   state = {
@@ -57,6 +60,19 @@ class NavMenu extends React.Component {
     this.props.onTripChange(tripId);
     this.setState({
       open: false,
+    });
+  };
+
+  _onTripLongPress = (tripId) => {
+    if (this.props.selectedTripId === tripId) {
+      this.props.onTripChange(null);
+    }
+    this.props.removeTrip(tripId);
+  }
+
+  _onPressNewTrip = () => {
+    this.props.createTrip().then((newTripId) => {
+      this.props.onTripChange(newTripId);
     });
   };
 
@@ -93,10 +109,17 @@ class NavMenu extends React.Component {
           opacity: this._openAnim,
         }]} pointerEvents={this.state.open ? 'auto' : 'none'}>
           {Object.keys(trips).map((tripId) => (
-            <MenuRow onPress={() => this._onTripPress(tripId)} key={tripId}>{trips[tripId].name}</MenuRow>
+            <MenuRow
+              onPress={() => this._onTripPress(tripId)}
+              onLongPress={() => this._onTripLongPress(tripId)}
+              key={tripId}>
+              {trips[tripId].name}
+            </MenuRow>
           ))}
           <View style={[Styles.MenuRow, Styles.MenuLastRow]}>
-            <UIText size="18">New trip</UIText>
+            <TouchableOpacity onPress={this._onPressNewTrip} style={Styles.MenuRowTouchable}>
+              <UIText size="18">New trip</UIText>
+            </TouchableOpacity>
           </View>
         </Animated.View>
       </View>
@@ -105,6 +128,9 @@ class NavMenu extends React.Component {
 }
 NavMenu = connect((state) => ({
   trips: trips.selectors.getTrips(state),
+}), (dispatch) => ({
+  createTrip: () => dispatch(trips.actions.createTrip()),
+  removeTrip: (tripId) => dispatch(trips.actions.removeTrip(tripId)),
 }))(NavMenu);
 export default NavMenu;
 

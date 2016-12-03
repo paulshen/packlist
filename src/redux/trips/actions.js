@@ -16,3 +16,30 @@ export function setTripItems(tripId: string, items: any) {
     items,
   };
 }
+
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
+
+export function createTrip() {
+  return (dispatch: Function) => {
+    let newTripId = guid();
+    dispatch({
+      type: t.CREATE_TRIP,
+      tripId: newTripId,
+    });
+    return Promise.resolve(newTripId);
+  };
+}
+
+export function removeTrip(tripId: string) {
+  return {
+    type: t.REMOVE_TRIP,
+    tripId,
+  };
+}
