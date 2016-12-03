@@ -1,9 +1,11 @@
 /* @flow */
 import React from 'react';
 import { Animated, Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { connect } from 'react-redux';
 
 import { Colors } from '../Constants';
 import { UIText } from './Core';
+import trips from '../../redux/trips';
 
 const WindowHeight = Dimensions.get('window').height;
 const ButtonPosition = {
@@ -24,9 +26,10 @@ function MenuRow({ children, onPress }: { children?: any, onPress?: Function }) 
   );
 }
 
-export default class NavMenu extends React.Component {
+class NavMenu extends React.Component {
   props: {
     onTripChange: (tripId: string) => void,
+    trips: { [tripId: string]: Object },
   };
 
   state = {
@@ -58,6 +61,7 @@ export default class NavMenu extends React.Component {
   };
 
   render() {
+    let { trips } = this.props;
     return (
       <View style={Styles.Root} pointerEvents="box-none">
         <Animated.View style={[Styles.Background, {
@@ -88,8 +92,9 @@ export default class NavMenu extends React.Component {
         <Animated.View style={[Styles.Menu, {
           opacity: this._openAnim,
         }]} pointerEvents={this.state.open ? 'auto' : 'none'}>
-          <MenuRow onPress={() => this._onTripPress('ee8566f4-ea1f-4289-bb5e-75f974611ecf')}>Copenhagen</MenuRow>
-          <MenuRow onPress={() => this._onTripPress('a6328be7-399f-455d-b642-4f20c285a305')}>Japan</MenuRow>
+          {Object.keys(trips).map((tripId) => (
+            <MenuRow onPress={() => this._onTripPress(tripId)} key={tripId}>{trips[tripId].name}</MenuRow>
+          ))}
           <View style={[Styles.MenuRow, Styles.MenuLastRow]}>
             <UIText size="18">New trip</UIText>
           </View>
@@ -98,6 +103,10 @@ export default class NavMenu extends React.Component {
     );
   }
 }
+NavMenu = connect((state) => ({
+  trips: trips.selectors.getTrips(state),
+}))(NavMenu);
+export default NavMenu;
 
 const Styles = StyleSheet.create({
   Root: {

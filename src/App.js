@@ -10,7 +10,7 @@ import { Store } from './redux';
 
 export default class App extends React.Component {
   state = {
-    selectedTripId: 'ee8566f4-ea1f-4289-bb5e-75f974611ecf',
+    selectedTripId: null,
   };
 
   _onTripChange = (tripId) => {
@@ -23,7 +23,7 @@ export default class App extends React.Component {
     return (
       <Provider store={Store}>
         <View style={{ flex: 1 }}>
-          <TripScreen tripId={this.state.selectedTripId} key={this.state.selectedTripId} />
+          {this.state.selectedTripId && <TripScreen tripId={this.state.selectedTripId} key={this.state.selectedTripId} />}
           <NavMenu onTripChange={this._onTripChange} />
         </View>
       </Provider>

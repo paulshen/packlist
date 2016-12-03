@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Animated, Button, Keyboard, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, Button, Keyboard, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Colors, Fonts } from '../Constants';
@@ -78,11 +78,16 @@ class Row extends React.Component {
 class TripScreen extends React.Component {
   props: {
     trip: Object,
+    setTripTitle: (title: string) => void,
     setTripItems: (items: any) => void,
   };
 
   state = {
     newItemText: '',
+  };
+
+  _onChangeTitleText = (text) => {
+    this.props.setTripTitle(text);
   };
 
   _onChangeNewItemText = (text) => {
@@ -127,9 +132,13 @@ class TripScreen extends React.Component {
     let checkedItems = this.props.trip.items.filter(i => i.checked);
 
     return (
-      <View style={Styles.Root}>
+      <ScrollView style={Styles.Root}>
         <View style={Styles.Header}>
-          <UIText size="24" weight="semibold">{this.props.trip.name}</UIText>
+          <TextInput
+            value={this.props.trip.name}
+            onChangeText={this._onChangeTitleText}
+            style={Styles.HeaderInput}
+          />
         </View>
         <View>
           <View style={Styles.Row}>
@@ -162,13 +171,14 @@ class TripScreen extends React.Component {
             );
           })}
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
 TripScreen = connect((state, ownProps) => ({
   trip: trips.selectors.getTrip(state, ownProps.tripId),
 }), (dispatch, ownProps) => ({
+  setTripTitle: (title) => dispatch(trips.actions.setTripTitle(ownProps.tripId, title)),
   setTripItems: (items) => dispatch(trips.actions.setTripItems(ownProps.tripId, items)),
 }))(TripScreen);
 export default TripScreen;
@@ -181,6 +191,12 @@ const Styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 70,
     paddingBottom: 40,
+  },
+  HeaderInput: {
+    ...Fonts.Medium,
+    fontSize: 24,
+    height: 36,
+    textAlign: 'center',
   },
   Row: {
     height: 50,
