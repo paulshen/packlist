@@ -84,6 +84,11 @@ class NavMenu extends React.Component {
     return (
       <View style={Styles.Root} pointerEvents="box-none">
         <Animated.View style={[Styles.Background, {
+          opacity: this._openAnim.interpolate({
+            inputRange: [0, 0.0001],
+            outputRange: [0, 1],
+            extrapolate: 'clamp',
+          }),
           bottom: this._openAnim.interpolate({
             inputRange: [0, 1],
             outputRange: [ButtonPosition.bottom, ButtonPosition.bottom - AnimateDistance],
@@ -102,7 +107,7 @@ class NavMenu extends React.Component {
           }),
         }]} />
         <TouchableOpacity
-          activeOpacity={this.state.open ? 1 : 0.85}
+          activeOpacity={0.85}
           onPress={this._onButtonPress}
           style={Styles.Button}>
           <View style={Styles.ButtonIcon} />
@@ -152,6 +157,7 @@ const Styles = StyleSheet.create({
   },
   Button: {
     alignItems: 'center',
+    backgroundColor: Colors.Blue,
     borderRadius: ButtonPosition.height / 2,
     bottom: ButtonPosition.bottom,
     flexDirection: 'row',
