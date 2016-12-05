@@ -73,6 +73,9 @@ class NavMenu extends React.Component {
   _onPressNewTrip = () => {
     this.props.createTrip().then((newTripId) => {
       this.props.onTripChange(newTripId);
+      this.setState({
+        open: false,
+      });
     });
   };
 

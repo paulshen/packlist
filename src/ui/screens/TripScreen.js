@@ -18,12 +18,12 @@ function ItemRow({ item, onPress, onLongPress }: { item: Item, onPress: Function
 
   return (
     <View style={Styles.ItemRow}>
-      <View>
-        <TouchableOpacity onPress={onPress} onLongPress={onLongPress} activeOpacity={0.6}>
+      <TouchableOpacity onPress={onPress} onLongPress={onLongPress} activeOpacity={0.6} style={Styles.ItemRowTouchable}>
+        <View>
           <UIText size="18">{item.text}</UIText>
           {strike}
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -86,6 +86,15 @@ class TripScreen extends React.Component {
     newItemText: '',
   };
 
+  _titleInput: TextInput;
+  _addInput: TextInput;
+
+  componentDidMount() {
+    if (!this.props.trip.name) {
+      this._titleInput.focus();
+    }
+  }
+
   _onChangeTitleText = (text) => {
     this.props.setTripTitle(text);
   };
@@ -106,7 +115,7 @@ class TripScreen extends React.Component {
     this.setState({
       newItemText: '',
     });
-    Keyboard.dismiss();
+    requestAnimationFrame(() => this._addInput.focus());
   };
 
   _onCancelAddPress = () => {
@@ -142,6 +151,7 @@ class TripScreen extends React.Component {
             value={this.props.trip.name}
             onChangeText={this._onChangeTitleText}
             placeholder="Name your trip"
+            ref={c => this._titleInput = c}
             style={Styles.HeaderInput}
           />
         </View>
@@ -155,6 +165,7 @@ class TripScreen extends React.Component {
                 value={this.state.newItemText}
                 returnKeyType="go"
                 enablesReturnKeyAutomatically={true}
+                ref={c => this._addInput = c}
                 style={Styles.AddInput}
               />
               {this.state.newItemText ?
@@ -220,6 +231,12 @@ const Styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     marginLeft: 34,
+  },
+  ItemRowTouchable: {
+    alignItems: 'flex-start',
+    alignSelf: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
   },
   AddItemRow: {
     paddingRight: 20,
