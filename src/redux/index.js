@@ -4,10 +4,12 @@ import { AsyncStorage } from 'react-native';
 import { persistStore, autoRehydrate } from 'redux-persist';
 import thunk from 'redux-thunk';
 import trips from './trips';
+import user from './user';
 
 const RootReducer = combineReducers(
   {
     [trips.constants.NAME]: trips.reducer,
+    [user.constants.NAME]: user.reducer,
   }
 );
 

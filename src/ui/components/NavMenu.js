@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { Colors } from '../Constants';
 import { UIText } from './Core';
 import trips from '../../redux/trips';
+import user from '../../redux/user';
 
 const WindowHeight = Dimensions.get('window').height;
 const ButtonPosition = {
@@ -30,7 +31,7 @@ class NavMenu extends React.Component {
   props: {
     createTrip: () => Promise<string>,
     removeTrip: (tripId: string) => void,
-    onTripChange: (tripId: ?string) => void,
+    selectTrip: (tripId: ?string) => void,
     trips: { [tripId: string]: Object },
     selectedTripId: ?string,
   };
@@ -57,7 +58,7 @@ class NavMenu extends React.Component {
   };
 
   _onTripPress = (tripId) => {
-    this.props.onTripChange(tripId);
+    this.props.selectTrip(tripId);
     this.setState({
       open: false,
     });
@@ -65,14 +66,14 @@ class NavMenu extends React.Component {
 
   _onTripLongPress = (tripId) => {
     if (this.props.selectedTripId === tripId) {
-      this.props.onTripChange(null);
+      this.props.selectTrip(null);
     }
     this.props.removeTrip(tripId);
   }
 
   _onPressNewTrip = () => {
     this.props.createTrip().then((newTripId) => {
-      this.props.onTripChange(newTripId);
+      this.props.selectTrip(newTripId);
       this.setState({
         open: false,
       });
@@ -135,10 +136,12 @@ class NavMenu extends React.Component {
   }
 }
 NavMenu = connect((state) => ({
+  selectedTripId: user.selectors.getSelectedTripId(state),
   trips: trips.selectors.getTrips(state),
 }), (dispatch) => ({
   createTrip: () => dispatch(trips.actions.createTrip()),
   removeTrip: (tripId) => dispatch(trips.actions.removeTrip(tripId)),
+  selectTrip: (tripId) => dispatch(user.actions.selectTrip(tripId)),
 }))(NavMenu);
 export default NavMenu;
 
