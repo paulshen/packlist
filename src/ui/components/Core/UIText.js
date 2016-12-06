@@ -7,10 +7,12 @@ import { Colors, Fonts } from '../../Constants';
 const SUPPORTED_COLORS = {
   black: Colors.Black,
   white: Colors.White,
+  lightgray: Colors.LightGray,
 };
 
 const SUPPORTED_FONT_SIZES = {
   '14': 14,
+  '16': 16,
   '18': 18,
   '24': 24,
 };

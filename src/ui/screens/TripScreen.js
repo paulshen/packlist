@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import { Colors, Fonts } from '../Constants';
 import { UIText } from '../components/Core';
+import EmptyTripPrompt from '../components/EmptyTripPrompt';
 import trips from '../../redux/trips';
 
 type Item = { id: number, checked?: boolean, text: string };
@@ -28,7 +29,7 @@ function ItemRow({ item, onPress, onLongPress }: { item: Item, onPress: Function
   );
 }
 
-class Row extends React.Component {
+class AnimatedRow extends React.Component {
   props: {
     children?: any,
     y: number,
@@ -77,6 +78,7 @@ class Row extends React.Component {
 
 class TripScreen extends React.Component {
   props: {
+    tripId: string,
     trip: Object,
     setTripTitle: (title: string) => void,
     setTripItems: (items: any) => void,
@@ -144,6 +146,11 @@ class TripScreen extends React.Component {
     let uncheckedItems = this.props.trip.items.filter(i => !i.checked);
     let checkedItems = this.props.trip.items.filter(i => i.checked);
 
+    let emptyTripPrompt;
+    if (this.props.trip.items.length === 0) {
+      emptyTripPrompt = <EmptyTripPrompt tripId={this.props.tripId} style={Styles.EmptyTripPrompt} />;
+    }
+
     return (
       <ScrollView style={Styles.Root} contentContainerStyle={Styles.ScrollInner}>
         <View style={Styles.Header}>
@@ -175,6 +182,7 @@ class TripScreen extends React.Component {
               : null}
             </View>
           </View>
+          {emptyTripPrompt}
           {this.props.trip.items.map((item, i) => {
             let y;
             if (!item.checked) {
@@ -183,13 +191,13 @@ class TripScreen extends React.Component {
               y = 50 * (uncheckedItems.length + checkedItems.indexOf(item) + 2);
             }
             return (
-              <Row y={y} key={item.id}>
+              <AnimatedRow y={y} key={item.id}>
                 <ItemRow
                   item={item}
                   onPress={() => this._onItemPress(item)}
                   onLongPress={() => this._onItemLongPress(item)}
                 />
-              </Row>
+              </AnimatedRow>
             );
           })}
         </View>
@@ -253,6 +261,9 @@ const Styles = StyleSheet.create({
     fontSize: 18,
     height: 32,
     top: 9,
+  },
+  EmptyTripPrompt: {
+    top: 50 * 2,
   },
   Strike: {
     backgroundColor: 'blue',
