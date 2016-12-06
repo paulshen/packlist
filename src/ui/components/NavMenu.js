@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react';
-import { Animated, Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Animated, Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Colors } from '../Constants';
@@ -34,6 +34,7 @@ class NavMenu extends React.Component {
     selectTrip: (tripId: ?string) => void,
     trips: { [tripId: string]: Object },
     selectedTripId: ?string,
+    getTripName: (tripId: string) => string,
   };
 
   state = {
@@ -65,10 +66,15 @@ class NavMenu extends React.Component {
   };
 
   _onTripLongPress = (tripId) => {
-    if (this.props.selectedTripId === tripId) {
-      this.props.selectTrip(null);
-    }
-    this.props.removeTrip(tripId);
+    Alert.alert(`Are you sure you want to delete ${this.props.getTripName(tripId)}?`, null, [
+      { text: 'Yes', onPress: () => {
+        if (this.props.selectedTripId === tripId) {
+          this.props.selectTrip(null);
+        }
+        this.props.removeTrip(tripId);
+      } },
+      { text: 'No' },
+    ]);
   }
 
   _onPressNewTrip = () => {
@@ -138,6 +144,7 @@ class NavMenu extends React.Component {
 NavMenu = connect((state) => ({
   selectedTripId: user.selectors.getSelectedTripId(state),
   trips: trips.selectors.getTrips(state),
+  getTripName: (tripId) => trips.selectors.getTrip(state, tripId).name,
 }), (dispatch) => ({
   createTrip: () => dispatch(trips.actions.createTrip()),
   removeTrip: (tripId) => dispatch(trips.actions.removeTrip(tripId)),
