@@ -89,7 +89,7 @@ class NavMenu extends React.Component {
   render() {
     let { trips } = this.props;
     return (
-      <View style={Styles.Root} pointerEvents="box-none">
+      <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
         <Animated.View style={[Styles.Background, {
           opacity: this._openAnim.interpolate({
             inputRange: [0, 0.0001],
@@ -153,13 +153,6 @@ NavMenu = connect((state) => ({
 export default NavMenu;
 
 const Styles = StyleSheet.create({
-  Root: {
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
   Background: {
     backgroundColor: Colors.Blue,
     borderRadius: WindowHeight / 2,
