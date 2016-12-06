@@ -145,7 +145,7 @@ class TripScreen extends React.Component {
     let checkedItems = this.props.trip.items.filter(i => i.checked);
 
     return (
-      <ScrollView style={Styles.Root}>
+      <ScrollView style={Styles.Root} contentContainerStyle={Styles.ScrollInner}>
         <View style={Styles.Header}>
           <TextInput
             value={this.props.trip.name}
@@ -155,7 +155,9 @@ class TripScreen extends React.Component {
             style={Styles.HeaderInput}
           />
         </View>
-        <View>
+        <View style={[Styles.Body, {
+          height: (this.props.trip.items.length + 2) * 50,
+        }]}>
           <View style={Styles.Row}>
             <View style={[Styles.ItemRow, Styles.AddItemRow]}>
               <TextInput
@@ -217,6 +219,9 @@ const Styles = StyleSheet.create({
     fontSize: 24,
     height: 36,
     textAlign: 'center',
+  },
+  Body: {
+    marginBottom: 120,
   },
   Row: {
     height: 50,
