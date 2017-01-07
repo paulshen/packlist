@@ -13,7 +13,7 @@ export default class AnimatedRow extends React.Component {
     yAnimation: Animated.Value,
   };
 
-  constructor(props) {
+  constructor(props: $PropertyType<AnimatedRow, 'props'>) {
     super();
     this.state = {
       prevY: props.y,
@@ -21,7 +21,7 @@ export default class AnimatedRow extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: $PropertyType<AnimatedRow, 'props'>) {
     if (nextProps.y !== this.props.y) {
       this.setState({
         prevY: this.props.y,
