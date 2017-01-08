@@ -2,6 +2,8 @@
 import React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 
+import { Sizes } from '../Constants';
+
 export default class AnimatedRow extends React.Component {
   props: {
     children?: any,
@@ -51,7 +53,7 @@ export default class AnimatedRow extends React.Component {
 
 const Styles = StyleSheet.create({
   Row: {
-    height: 50,
+    height: Sizes.RowHeight,
     left: 0,
     position: 'absolute',
     right: 0,

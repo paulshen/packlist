@@ -4,7 +4,7 @@ import React from 'react';
 import { Animated, Button, Keyboard, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 
-import { Colors, Fonts } from '../Constants';
+import { Colors, Fonts, Sizes } from '../Constants';
 import { UIText } from '../components/Core';
 import AnimatedRow from '../components/AnimatedRow';
 import EmptyTripPrompt from '../components/EmptyTripPrompt';
@@ -22,7 +22,7 @@ function ItemRow({ item, onPress, onLongPress }: { item: Item, onPress: Function
     <View style={Styles.ItemRow}>
       <TouchableOpacity onPress={onPress} onLongPress={onLongPress} activeOpacity={0.6} style={Styles.ItemRowTouchable}>
         <View>
-          <UIText size="18">{item.text}</UIText>
+          <UIText size="16">{item.text}</UIText>
           {strike}
         </View>
       </TouchableOpacity>
@@ -106,7 +106,7 @@ class TripScreen extends React.Component {
     }
 
     return (
-      <ScrollView style={Styles.Root} contentContainerStyle={Styles.ScrollInner}>
+      <ScrollView showsVerticalScrollIndicator={false} style={Styles.Root} contentContainerStyle={Styles.ScrollInner}>
         <View style={Styles.Header}>
           <TextInput
             value={this.props.trip.name}
@@ -117,7 +117,7 @@ class TripScreen extends React.Component {
           />
         </View>
         <View style={[Styles.Body, {
-          height: (this.props.trip.items.length + 2) * 50,
+          height: (this.props.trip.items.length + 2) * Sizes.RowHeight,
         }]}>
           <View style={Styles.Row}>
             <View style={[Styles.ItemRow, Styles.AddItemRow]}>
@@ -140,9 +140,9 @@ class TripScreen extends React.Component {
           {this.props.trip.items.map((item, i) => {
             let y;
             if (!item.checked) {
-              y = 50 * (uncheckedItems.indexOf(item) + 1);
+              y = Sizes.RowHeight * (uncheckedItems.indexOf(item) + 1);
             } else {
-              y = 50 * (uncheckedItems.length + checkedItems.indexOf(item) + 2);
+              y = Sizes.RowHeight * (uncheckedItems.length + checkedItems.indexOf(item) + 2);
             }
             return (
               <AnimatedRow y={y} key={item.id}>
@@ -173,8 +173,8 @@ const Styles = StyleSheet.create({
   },
   Header: {
     alignItems: 'center',
-    paddingTop: 70,
-    paddingBottom: 40,
+    paddingTop: 50,
+    paddingBottom: 20,
   },
   HeaderInput: {
     ...Fonts.Medium,
@@ -186,7 +186,7 @@ const Styles = StyleSheet.create({
     marginBottom: 120,
   },
   Row: {
-    height: 50,
+    height: Sizes.RowHeight,
     left: 0,
     position: 'absolute',
     right: 0,
@@ -197,7 +197,7 @@ const Styles = StyleSheet.create({
     borderBottomColor: Colors.LightGrayBorder,
     flex: 1,
     flexDirection: 'row',
-    marginLeft: 34,
+    marginLeft: 30,
   },
   ItemRowTouchable: {
     alignItems: 'flex-start',
@@ -212,19 +212,19 @@ const Styles = StyleSheet.create({
     ...Fonts.Regular,
     color: Colors.Black,
     flex: 1,
-    fontSize: 18,
+    fontSize: 16,
     height: 32,
-    top: 9,
+    top: 7,
   },
   EmptyTripPrompt: {
-    top: 50 * 2,
+    top: Sizes.RowHeight * 2,
   },
   Strike: {
     backgroundColor: 'blue',
-    left: -20,
+    left: -10,
     height: 2,
     position: 'absolute',
-    right: -40,
-    top: 10,
+    right: -20,
+    top: 11,
   },
 });

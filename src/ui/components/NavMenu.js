@@ -12,7 +12,7 @@ const WindowHeight = Dimensions.get('window').height;
 const ButtonPosition = {
   bottom: 38,
   height: 42,
-  left: 34,
+  right: 30,
   width: 140,
 };
 const AnimateDistance = WindowHeight - ButtonPosition.bottom - ButtonPosition.height;
@@ -100,13 +100,13 @@ class NavMenu extends React.Component {
             inputRange: [0, 1],
             outputRange: [ButtonPosition.bottom, ButtonPosition.bottom - AnimateDistance],
           }),
-          left: this._openAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [ButtonPosition.left, ButtonPosition.left - AnimateDistance],
-          }),
           height: this._openAnim.interpolate({
             inputRange: [0, 1],
             outputRange: [ButtonPosition.height, ButtonPosition.height + 2 * AnimateDistance],
+          }),
+          right: this._openAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [ButtonPosition.right, ButtonPosition.right - AnimateDistance],
           }),
           width: this._openAnim.interpolate({
             inputRange: [0, 1],
@@ -165,9 +165,9 @@ const Styles = StyleSheet.create({
     bottom: ButtonPosition.bottom,
     flexDirection: 'row',
     height: ButtonPosition.height,
-    left: ButtonPosition.left,
     paddingLeft: 6,
     position: 'absolute',
+    right: ButtonPosition.right,
     width: ButtonPosition.width,
   },
   ButtonIcon: {
@@ -184,9 +184,9 @@ const Styles = StyleSheet.create({
     backgroundColor: Colors.White,
     borderRadius: 10,
     bottom: 100,
-    left: ButtonPosition.left,
-    right: 24,
+    left: 24,
     position: 'absolute',
+    right: ButtonPosition.right,
     shadowColor: '#000000',
     shadowOffset: { x: 0, y: 6 },
     shadowOpacity: 0.2,
