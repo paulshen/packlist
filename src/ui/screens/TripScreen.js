@@ -44,6 +44,7 @@ class TripScreen extends React.Component {
 
   _titleInput: TextInput;
   _addInput: TextInput;
+  _scrollAnim = new Animated.Value(0);
 
   componentDidMount() {
     if (!this.props.trip.name) {
@@ -96,6 +97,10 @@ class TripScreen extends React.Component {
     this.props.setTripItems(this.props.trip.items.filter(i => i !== item));
   };
 
+  _onScroll = (e) => {
+    this._scrollAnim.setValue(e.nativeEvent.contentOffset.y / Sizes.RowHeight);
+  };
+
   render() {
     let uncheckedItems = this.props.trip.items.filter(i => !i.checked);
     let checkedItems = this.props.trip.items.filter(i => i.checked);
@@ -106,7 +111,7 @@ class TripScreen extends React.Component {
     }
 
     return (
-      <ScrollView showsVerticalScrollIndicator={false} style={Styles.Root} contentContainerStyle={Styles.ScrollInner}>
+      <View style={Styles.Root}>
         <View style={Styles.Header}>
           <TextInput
             value={this.props.trip.name}
@@ -116,46 +121,60 @@ class TripScreen extends React.Component {
             style={Styles.HeaderInput}
           />
         </View>
-        <View style={[Styles.Body, {
-          height: (this.props.trip.items.length + 2) * Sizes.RowHeight,
-        }]}>
-          <View style={Styles.Row}>
-            <View style={[Styles.ItemRow, Styles.AddItemRow]}>
-              <TextInput
-                placeholder="Add item"
-                onChangeText={this._onChangeNewItemText}
-                onSubmitEditing={this._addItem}
-                value={this.state.newItemText}
-                returnKeyType="go"
-                enablesReturnKeyAutomatically={true}
-                ref={c => this._addInput = c}
-                style={Styles.AddInput}
-              />
-              {this.state.newItemText ?
-                <Button title="Cancel" onPress={this._onCancelAddPress} />
-              : null}
-            </View>
-          </View>
-          {emptyTripPrompt}
-          {this.props.trip.items.map((item, i) => {
-            let y;
-            if (!item.checked) {
-              y = Sizes.RowHeight * (uncheckedItems.indexOf(item) + 1);
-            } else {
-              y = Sizes.RowHeight * (uncheckedItems.length + checkedItems.indexOf(item) + 2);
-            }
-            return (
-              <AnimatedRow y={y} key={item.id}>
-                <ItemRow
-                  item={item}
-                  onPress={() => this._onItemPress(item)}
-                  onLongPress={() => this._onItemLongPress(item)}
+        <Animated.View style={[Styles.HeaderShadow, {
+          shadowOpacity: this._scrollAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 1],
+            extrapolate: 'clamp',
+          }),
+        }]} />
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          onScroll={this._onScroll}
+          scrollEventThrottle={16}
+          style={Styles.Root}
+          contentContainerStyle={Styles.ScrollInner}>
+          <View style={[Styles.Body, {
+            height: (this.props.trip.items.length + 2) * Sizes.RowHeight,
+          }]}>
+            <View style={Styles.Row}>
+              <View style={[Styles.ItemRow, Styles.AddItemRow]}>
+                <TextInput
+                  placeholder="Add item"
+                  onChangeText={this._onChangeNewItemText}
+                  onSubmitEditing={this._addItem}
+                  value={this.state.newItemText}
+                  returnKeyType="go"
+                  enablesReturnKeyAutomatically={true}
+                  ref={c => this._addInput = c}
+                  style={Styles.AddInput}
                 />
-              </AnimatedRow>
-            );
-          })}
-        </View>
-      </ScrollView>
+                {this.state.newItemText ?
+                  <Button title="Cancel" onPress={this._onCancelAddPress} />
+                : null}
+              </View>
+            </View>
+            {emptyTripPrompt}
+            {this.props.trip.items.map((item, i) => {
+              let y;
+              if (!item.checked) {
+                y = Sizes.RowHeight * (uncheckedItems.indexOf(item) + 1);
+              } else {
+                y = Sizes.RowHeight * (uncheckedItems.length + checkedItems.indexOf(item) + 2);
+              }
+              return (
+                <AnimatedRow y={y} key={item.id}>
+                  <ItemRow
+                    item={item}
+                    onPress={() => this._onItemPress(item)}
+                    onLongPress={() => this._onItemLongPress(item)}
+                  />
+                </AnimatedRow>
+              );
+            })}
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -172,9 +191,20 @@ const Styles = StyleSheet.create({
     flex: 1,
   },
   Header: {
-    alignItems: 'center',
-    paddingTop: 50,
-    paddingBottom: 20,
+    alignItems: 'stretch',
+    backgroundColor: Colors.White,
+    paddingTop: 44,
+    paddingBottom: 24,
+    zIndex: 2,
+  },
+  HeaderShadow: {
+    backgroundColor: Colors.White,
+    height: 1,
+    marginLeft: 20,
+    shadowColor: '#000000',
+    shadowOffset: { x: 0, y: 6 },
+    shadowRadius: 16,
+    zIndex: 1,
   },
   HeaderInput: {
     ...Fonts.Medium,
