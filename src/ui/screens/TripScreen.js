@@ -220,7 +220,7 @@ const Styles = StyleSheet.create({
     top: Sizes.RowHeight * 2,
   },
   Strike: {
-    backgroundColor: 'blue',
+    backgroundColor: Colors.Blue,
     left: -10,
     height: 2,
     position: 'absolute',

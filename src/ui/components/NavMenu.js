@@ -258,7 +258,7 @@ const Styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   ButtonIconLine: {
-    backgroundColor: '#C789FE',
+    backgroundColor: '#90E3D2',
     height: 2,
     width: 14,
   },

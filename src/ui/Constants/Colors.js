@@ -4,6 +4,6 @@ export default {
   White: '#FFFFFF',
   LightGray: '#C0C0C0',
 
-  Blue: '#9012FE',
+  Blue: '#21C8A5',
   LightGrayBorder: '#F6F6F6',
 };
