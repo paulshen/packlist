@@ -3,7 +3,7 @@ import React from 'react';
 import { Alert, Animated, Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 
-import { Colors } from '../Constants';
+import { Colors, Sizes } from '../Constants';
 import { UIText } from './Core';
 import trips from '../../redux/trips';
 import user from '../../redux/user';
@@ -17,11 +17,64 @@ const ButtonPosition = {
 };
 const AnimateDistance = WindowHeight - ButtonPosition.bottom - ButtonPosition.height;
 
+class ButtonIcon extends React.Component {
+  _anim: Animated.Value;
+
+  constructor(props) {
+    super();
+    this._anim = new Animated.Value(props.close ? 1 : 0);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.close !== this.props.close) {
+      Animated.timing(this._anim, {
+        toValue: nextProps.close ? 1 : 0,
+        duration: 200,
+      }).start();
+    }
+  }
+
+  render() {
+    return (
+      <View style={this.props.style}>
+        <Animated.View style={[Styles.ButtonIconLine, {
+          marginBottom: 3,
+          transform: [
+            { translateY: this._anim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 5],
+            }) },
+            { rotate: this._anim.interpolate({
+              inputRange: [0, 1],
+              outputRange: ['0deg', '135deg'],
+            }) },
+          ],
+        }]} />
+        <Animated.View style={[Styles.ButtonIconLine, {
+          marginBottom: 3,
+          transform: [{
+            rotate: this._anim.interpolate({
+              inputRange: [0, 1],
+              outputRange: ['0deg', '-135deg'],
+            }),
+          }],
+        }]} />
+        <Animated.View style={[Styles.ButtonIconLine, {
+          opacity: this._anim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [1, 0],
+          }),
+        }]} />
+      </View>
+    );
+  }
+}
+
 function MenuRow({ children, onPress, onLongPress }: { children?: any, onPress?: Function, onLongPress?: Function }) {
   return (
     <View style={Styles.MenuRow}>
       <TouchableOpacity onPress={onPress} onLongPress={onLongPress} style={Styles.MenuRowTouchable}>
-        <UIText size="18">{children}</UIText>
+        <UIText size="16">{children}</UIText>
       </TouchableOpacity>
     </View>
   );
@@ -117,8 +170,10 @@ class NavMenu extends React.Component {
           activeOpacity={0.85}
           onPress={this._onButtonPress}
           style={Styles.Button}>
-          <View style={Styles.ButtonIcon} />
-          <UIText color="white" size="14" weight="medium" style={Styles.ButtonText}>Change trip</UIText>
+          <UIText color="white" size="14" weight="medium" style={Styles.ButtonText}>
+            {this.state.open ? 'Close' : 'Change trip'}
+          </UIText>
+          <ButtonIcon style={Styles.ButtonIcon} close={this.state.open} />
         </TouchableOpacity>
         <Animated.View style={[Styles.Menu, {
           opacity: this._openAnim,
@@ -133,7 +188,7 @@ class NavMenu extends React.Component {
           ))}
           <View style={[Styles.MenuRow, Styles.MenuLastRow]}>
             <TouchableOpacity onPress={this._onPressNewTrip} style={Styles.MenuRowTouchable}>
-              <UIText size="18">New trip</UIText>
+              <UIText size="16">New trip</UIText>
             </TouchableOpacity>
           </View>
         </Animated.View>
@@ -165,17 +220,12 @@ const Styles = StyleSheet.create({
     bottom: ButtonPosition.bottom,
     flexDirection: 'row',
     height: ButtonPosition.height,
-    paddingLeft: 6,
+    paddingHorizontal: 14,
     position: 'absolute',
     right: ButtonPosition.right,
-    width: ButtonPosition.width,
   },
   ButtonIcon: {
-    backgroundColor: '#FFFFFF80',
-    borderRadius: 15,
-    height: 30,
-    marginRight: 10,
-    width: 30,
+    marginLeft: 8,
   },
   ButtonText: {
     backgroundColor: 'transparent'
@@ -195,9 +245,9 @@ const Styles = StyleSheet.create({
   MenuRow: {
     borderBottomColor: Colors.LightGrayBorder,
     borderBottomWidth: 1,
-    height: 52,
+    height: Sizes.RowHeight,
     justifyContent: 'center',
-    marginLeft: 24,
+    marginLeft: 20,
   },
   MenuRowTouchable: {
     alignItems: 'center',
@@ -206,5 +256,10 @@ const Styles = StyleSheet.create({
   },
   MenuLastRow: {
     borderBottomWidth: 0,
+  },
+  ButtonIconLine: {
+    backgroundColor: '#C789FE',
+    height: 2,
+    width: 14,
   },
 });
