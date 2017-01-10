@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 
-import { Colors } from '../Constants';
+import { Colors, Sizes } from '../Constants';
 import { UIText } from './Core';
 import trips from '../../redux/trips';
 
@@ -11,7 +11,7 @@ function Row({ children, onPress }) {
   return (
     <View style={Styles.Row}>
       <TouchableOpacity onPress={onPress} style={Styles.RowTouchable}>
-        <UIText size="18">{children}</UIText>
+        <UIText size="16">{children}</UIText>
       </TouchableOpacity>
     </View>
   );
@@ -58,7 +58,7 @@ export default EmptyTripPrompt;
 
 const Styles = StyleSheet.create({
   Root: {
-    paddingLeft: 34,
+    paddingLeft: 30,
   },
   Prompt: {
     marginBottom: 10,
@@ -66,7 +66,7 @@ const Styles = StyleSheet.create({
   Row: {
     borderBottomColor: Colors.LightGrayBorder,
     borderBottomWidth: 1,
-    height: 50,
+    height: Sizes.RowHeight,
   },
   RowTouchable: {
     flex: 1,

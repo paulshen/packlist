@@ -183,7 +183,7 @@ class NavMenu extends React.Component {
               onPress={() => this._onTripPress(tripId)}
               onLongPress={() => this._onTripLongPress(tripId)}
               key={tripId}>
-              {trips[tripId].name}
+              {trips[tripId].name || 'Untitled'}
             </MenuRow>
           ))}
           <View style={[Styles.MenuRow, Styles.MenuLastRow]}>

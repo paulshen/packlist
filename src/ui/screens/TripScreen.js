@@ -141,6 +141,7 @@ class TripScreen extends React.Component {
               <View style={[Styles.ItemRow, Styles.AddItemRow]}>
                 <TextInput
                   placeholder="Add item"
+                  placeholderTextColor={this.props.trip.items.length === 0 ? Colors.Blue : Colors.LightGray}
                   onChangeText={this._onChangeNewItemText}
                   onSubmitEditing={this._addItem}
                   value={this.state.newItemText}
