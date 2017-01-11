@@ -256,6 +256,6 @@ const Styles = StyleSheet.create({
     height: 2,
     position: 'absolute',
     right: -20,
-    top: 11,
+    top: 10,
   },
 });

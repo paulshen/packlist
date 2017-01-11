@@ -165,7 +165,11 @@ class NavMenu extends React.Component {
             inputRange: [0, 1],
             outputRange: [ButtonPosition.width, ButtonPosition.width + 2 * AnimateDistance],
           }),
-        }]} />
+        }]}>
+          <TouchableOpacity onPress={this._onButtonPress} style={StyleSheet.absoluteFill}>
+            <View />
+          </TouchableOpacity>
+        </Animated.View>
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={this._onButtonPress}
