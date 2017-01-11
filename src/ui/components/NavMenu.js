@@ -1,5 +1,6 @@
 /* @flow */
 import React from 'react';
+import type { OrderedMap } from 'immutable';
 import { Alert, Animated, Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import InvertibleScrollView from 'react-native-invertible-scroll-view';
@@ -10,6 +11,7 @@ import trips from '../../redux/trips';
 import user from '../../redux/user';
 
 const WindowHeight = Dimensions.get('window').height;
+const AnimationDuration = 200;
 const ButtonPosition = {
   bottom: 38,
   height: 42,
@@ -30,7 +32,7 @@ class ButtonIcon extends React.Component {
     if (nextProps.close !== this.props.close) {
       Animated.timing(this._anim, {
         toValue: nextProps.close ? 1 : 0,
-        duration: 200,
+        duration: AnimationDuration,
       }).start();
     }
   }
@@ -86,7 +88,8 @@ class NavMenu extends React.Component {
     createTrip: () => Promise<string>,
     removeTrip: (tripId: string) => void,
     selectTrip: (tripId: ?string) => void,
-    trips: { [tripId: string]: Object },
+    moveTripToMostRecent: (tripId: ?string) => void,
+    trips: OrderedMap<string, Object>,
     selectedTripId: ?string,
     getTripName: (tripId: string) => string,
   };
@@ -96,17 +99,21 @@ class NavMenu extends React.Component {
   };
 
   _openAnim = new Animated.Value(0);
+  _moveTripTimeout: number;
 
   componentDidUpdate(prevProps: $PropertyType<NavMenu, 'props'>, prevState: $PropertyType<NavMenu, 'state'>) {
     if (this.state.open !== prevState.open) {
       Animated.timing(this._openAnim, {
         toValue: this.state.open ? 1 : 0,
-        duration: 200,
+        duration: AnimationDuration,
       }).start();
     }
   }
 
   _onButtonPress = () => {
+    if (!this.state.open && this._moveTripTimeout) {
+      clearTimeout(this._moveTripTimeout);
+    }
     this.setState({
       open: !this.state.open,
     });
@@ -114,6 +121,7 @@ class NavMenu extends React.Component {
 
   _onTripPress = (tripId) => {
     this.props.selectTrip(tripId);
+    this._moveTripTimeout = setTimeout(() => this.props.moveTripToMostRecent(tripId), AnimationDuration);
     this.setState({
       open: false,
     });
@@ -134,6 +142,7 @@ class NavMenu extends React.Component {
   _onPressNewTrip = () => {
     this.props.createTrip().then((newTripId) => {
       this.props.selectTrip(newTripId);
+      this.props.moveTripToMostRecent(newTripId);
       this.setState({
         open: false,
       });
@@ -185,15 +194,16 @@ class NavMenu extends React.Component {
         }]} pointerEvents={this.state.open ? 'auto' : 'none'}>
           <View style={Styles.MenuInner}>
             <InvertibleScrollView inverted={true} showsVerticalScrollIndicator={false} style={Styles.MenuScroll}>
-              {Object.keys(trips).map((tripId, i) => (
+              {trips.mapEntries(([tripId, trip], i) => ([
+                tripId,
                 <MenuRow
                   onPress={() => this._onTripPress(tripId)}
                   onLongPress={() => this._onTripLongPress(tripId)}
                   isFirstRow={i === 0}
                   key={tripId}>
-                  {trips[tripId].name || 'Untitled'}
-                </MenuRow>
-              ))}
+                  {trip.name || 'Untitled'}
+                </MenuRow>,
+              ])).toArray()}
             </InvertibleScrollView>
             <View style={Styles.MenuRow}>
               <TouchableOpacity onPress={this._onPressNewTrip} style={Styles.MenuRowTouchable}>
@@ -214,6 +224,7 @@ NavMenu = connect((state) => ({
   createTrip: () => dispatch(trips.actions.createTrip()),
   removeTrip: (tripId) => dispatch(trips.actions.removeTrip(tripId)),
   selectTrip: (tripId) => dispatch(user.actions.selectTrip(tripId)),
+  moveTripToMostRecent: (tripId) => dispatch(trips.actions.moveTripToMostRecent(tripId)),
 }))(NavMenu);
 export default NavMenu;
 

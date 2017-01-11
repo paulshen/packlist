@@ -43,3 +43,10 @@ export function removeTrip(tripId: string) {
     tripId,
   };
 }
+
+export function moveTripToMostRecent(tripId: string) {
+  return {
+    type: t.MOVE_TRIP_TO_MOST_RECENT,
+    tripId,
+  };
+}

@@ -1,5 +1,6 @@
 /* @flow */
 import React from 'react';
+import type { OrderedMap } from 'immutable';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 
@@ -21,7 +22,7 @@ class EmptyTripPrompt extends React.Component {
   props: {
     setTripItems: (items: Object[]) => void,
     tripId: string,
-    trips: { [tripId: string]: Object },
+    trips: OrderedMap<string, Object>,
     style?: any,
   };
 
@@ -33,13 +34,12 @@ class EmptyTripPrompt extends React.Component {
   };
 
   render() {
-    let items = Object.keys(this.props.trips).map((tripId) => {
-      let trip = this.props.trips[tripId];
+    let items = this.props.trips.map((trip, tripId) => {
       if (tripId === this.props.tripId) {
         return null;
       }
       return <Row onPress={() => this._onTripPress(trip)} key={tripId}>{trip.name || 'Untitled'}</Row>;
-    });
+    }).toArray();
 
     return (
       <View style={[Styles.Root, this.props.style]}>
