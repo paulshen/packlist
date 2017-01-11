@@ -38,7 +38,7 @@ class EmptyTripPrompt extends React.Component {
       if (tripId === this.props.tripId) {
         return null;
       }
-      return <Row onPress={() => this._onTripPress(trip)} key={tripId}>{trip.name}</Row>;
+      return <Row onPress={() => this._onTripPress(trip)} key={tripId}>{trip.name || 'Untitled'}</Row>;
     });
 
     return (

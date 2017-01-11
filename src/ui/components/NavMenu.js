@@ -2,6 +2,7 @@
 import React from 'react';
 import { Alert, Animated, Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
+import InvertibleScrollView from 'react-native-invertible-scroll-view';
 
 import { Colors, Sizes } from '../Constants';
 import { UIText } from './Core';
@@ -70,9 +71,9 @@ class ButtonIcon extends React.Component {
   }
 }
 
-function MenuRow({ children, onPress, onLongPress }: { children?: any, onPress?: Function, onLongPress?: Function }) {
+function MenuRow({ children, onPress, onLongPress, isFirstRow }: { children?: any, onPress?: Function, onLongPress?: Function, isFirstRow: boolean }) {
   return (
-    <View style={Styles.MenuRow}>
+    <View style={[Styles.MenuRow, isFirstRow && Styles.MenuFirstRow]}>
       <TouchableOpacity onPress={onPress} onLongPress={onLongPress} style={Styles.MenuRowTouchable}>
         <UIText size="16">{children}</UIText>
       </TouchableOpacity>
@@ -182,18 +183,23 @@ class NavMenu extends React.Component {
         <Animated.View style={[Styles.Menu, {
           opacity: this._openAnim,
         }]} pointerEvents={this.state.open ? 'auto' : 'none'}>
-          {Object.keys(trips).map((tripId) => (
-            <MenuRow
-              onPress={() => this._onTripPress(tripId)}
-              onLongPress={() => this._onTripLongPress(tripId)}
-              key={tripId}>
-              {trips[tripId].name || 'Untitled'}
-            </MenuRow>
-          ))}
-          <View style={[Styles.MenuRow, Styles.MenuLastRow]}>
-            <TouchableOpacity onPress={this._onPressNewTrip} style={Styles.MenuRowTouchable}>
-              <UIText size="16">New trip</UIText>
-            </TouchableOpacity>
+          <View style={Styles.MenuInner}>
+            <InvertibleScrollView inverted={true} showsVerticalScrollIndicator={false} style={Styles.MenuScroll}>
+              {Object.keys(trips).map((tripId, i) => (
+                <MenuRow
+                  onPress={() => this._onTripPress(tripId)}
+                  onLongPress={() => this._onTripLongPress(tripId)}
+                  isFirstRow={i === 0}
+                  key={tripId}>
+                  {trips[tripId].name || 'Untitled'}
+                </MenuRow>
+              ))}
+            </InvertibleScrollView>
+            <View style={Styles.MenuRow}>
+              <TouchableOpacity onPress={this._onPressNewTrip} style={Styles.MenuRowTouchable}>
+                <UIText size="16">New trip</UIText>
+              </TouchableOpacity>
+            </View>
           </View>
         </Animated.View>
       </View>
@@ -234,6 +240,9 @@ const Styles = StyleSheet.create({
   ButtonText: {
     backgroundColor: 'transparent'
   },
+  MenuScroll: {
+    maxHeight: 4.5 * (Sizes.RowHeight + 1),
+  },
   Menu: {
     backgroundColor: Colors.White,
     borderRadius: 10,
@@ -246,9 +255,13 @@ const Styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 16,
   },
+  MenuInner: {
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
   MenuRow: {
-    borderBottomColor: Colors.LightGrayBorder,
-    borderBottomWidth: 1,
+    borderTopColor: Colors.LightGrayBorder,
+    borderTopWidth: 1,
     height: Sizes.RowHeight,
     justifyContent: 'center',
     marginLeft: 20,
@@ -258,8 +271,8 @@ const Styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
   },
-  MenuLastRow: {
-    borderBottomWidth: 0,
+  MenuFirstRow: {
+    borderTopWidth: 0,
   },
   ButtonIconLine: {
     backgroundColor: '#90E3D2',
