@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Animated, Button, Keyboard, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, Button, Image, Keyboard, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Colors, Fonts, Sizes } from '../Constants';
@@ -13,18 +13,14 @@ import trips from '../../redux/trips';
 type Item = { id: number, checked?: boolean, text: string };
 
 function ItemRow({ item, onPress, onLongPress }: { item: Item, onPress: Function, onLongPress: Function }) {
-  let strike;
-  if (item.checked) {
-    strike = <View style={Styles.Strike} />;
-  }
-
   return (
     <View style={Styles.ItemRow}>
+      {item.checked && <View style={Styles.ItemRowChecked} />}
       <TouchableOpacity onPress={onPress} onLongPress={onLongPress} activeOpacity={0.6} style={Styles.ItemRowTouchable}>
         <View>
           <UIText size="16">{item.text}</UIText>
-          {strike}
         </View>
+        {item.checked && <Image source={require('../../../assets/check.png')} />}
       </TouchableOpacity>
     </View>
   );
@@ -83,14 +79,9 @@ class TripScreen extends React.Component {
   };
 
   _onItemPress = (item: Item) => {
-    let unchecked = this.props.trip.items.filter(i => i !== item && !i.checked);
-    let checked = this.props.trip.items.filter(i => i !== item && i.checked);
-
-    this.props.setTripItems([
-      ...unchecked,
-      { ...item, checked: !item.checked },
-      ...checked,
-    ]);
+    let items = [...this.props.trip.items];
+    items[items.indexOf(item)] = { ...item, checked: !item.checked };
+    this.props.setTripItems(items);
   };
 
   _onItemLongPress = (item: Item) => {
@@ -102,9 +93,6 @@ class TripScreen extends React.Component {
   };
 
   render() {
-    let uncheckedItems = this.props.trip.items.filter(i => !i.checked);
-    let checkedItems = this.props.trip.items.filter(i => i.checked);
-
     let emptyTripPrompt;
     if (this.props.trip.items.length === 0) {
       emptyTripPrompt = <EmptyTripPrompt tripId={this.props.tripId} style={Styles.EmptyTripPrompt} />;
@@ -157,12 +145,7 @@ class TripScreen extends React.Component {
             </View>
             {emptyTripPrompt}
             {this.props.trip.items.map((item, i) => {
-              let y;
-              if (!item.checked) {
-                y = Sizes.RowHeight * (uncheckedItems.indexOf(item) + 1);
-              } else {
-                y = Sizes.RowHeight * (uncheckedItems.length + checkedItems.indexOf(item) + 2);
-              }
+              let y = (i + 1) * Sizes.RowHeight;
               return (
                 <AnimatedRow y={y} key={item.id}>
                   <ItemRow
@@ -228,13 +211,19 @@ const Styles = StyleSheet.create({
     borderBottomColor: Colors.LightGrayBorder,
     flex: 1,
     flexDirection: 'row',
-    marginLeft: 30,
+    paddingLeft: 30,
+  },
+  ItemRowChecked: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#F5F9FD',
   },
   ItemRowTouchable: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
     alignSelf: 'stretch',
     flex: 1,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 30,
   },
   AddItemRow: {
     paddingRight: 20,
@@ -249,13 +238,5 @@ const Styles = StyleSheet.create({
   },
   EmptyTripPrompt: {
     top: Sizes.RowHeight * 2,
-  },
-  Strike: {
-    backgroundColor: Colors.Blue,
-    left: -10,
-    height: 2,
-    position: 'absolute',
-    right: -20,
-    top: 10,
   },
 });

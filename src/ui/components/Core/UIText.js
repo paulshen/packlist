@@ -23,7 +23,7 @@ export default function UIText({ color, size, style, weight, ...props }: {
   style?: any,
   weight?: 'regular' | 'medium' | 'semibold',
 }) {
-  let styles = [style];
+  let styles = [style, Styles.Text];
   switch (weight) {
   case 'medium':
     styles.push(Fonts.Medium);
@@ -63,6 +63,9 @@ Object.keys(SUPPORTED_FONT_SIZES).forEach((k) => {
 });
 
 const Styles = StyleSheet.create({
+  Text: {
+    backgroundColor: 'transparent',
+  },
   ...colorStyles,
   ...fontSizeStyles,
 });
