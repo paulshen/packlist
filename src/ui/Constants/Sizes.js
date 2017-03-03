@@ -1,4 +1,4 @@
 /* @flow */
 export default {
-  RowHeight: 44,
+  RowHeight: 52,
 };
