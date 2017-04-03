@@ -1,5 +1,8 @@
 /* @flow */
 export default {
+  Light: {
+    fontFamily: 'SFUIText-Light',
+  },
   Regular: {
     fontFamily: 'SFUIText-Regular',
   },

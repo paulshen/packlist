@@ -1,9 +1,8 @@
 /* @flow */
 import React from 'react';
 import type { OrderedMap } from 'immutable';
-import { Alert, Animated, Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Animated, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
-import InvertibleScrollView from 'react-native-invertible-scroll-view';
 
 import { Colors, Sizes } from '../Constants';
 import { UIText } from './Core';
@@ -11,6 +10,7 @@ import trips from '../../redux/trips';
 import user from '../../redux/user';
 
 const WindowHeight = Dimensions.get('window').height;
+const WindowWidth = Dimensions.get('window').width;
 const AnimationDuration = 200;
 const ButtonPosition = {
   bottom: 38,
@@ -73,11 +73,12 @@ class ButtonIcon extends React.Component {
   }
 }
 
-function MenuRow({ children, onPress, onLongPress, isFirstRow }: { children?: any, onPress?: Function, onLongPress?: Function, isFirstRow: boolean }) {
+function MenuItem({ trip, onPress, onLongPress }: { trip: Object, onPress?: Function, onLongPress?: Function }) {
   return (
-    <View style={[Styles.MenuRow, isFirstRow && Styles.MenuFirstRow]}>
-      <TouchableOpacity onPress={onPress} onLongPress={onLongPress} style={Styles.MenuRowTouchable}>
-        <UIText size="16">{children}</UIText>
+    <View style={Styles.MenuItem}>
+      <TouchableOpacity onPress={onPress} onLongPress={onLongPress} style={Styles.MenuItemTouchable}>
+        <UIText size="16" weight="medium">{trip.name || 'Untitled'}</UIText>
+        <UIText color="verylightgray" size="48" weight="light">{trip.items ? trip.items.length : '+'}</UIText>
       </TouchableOpacity>
     </View>
   );
@@ -180,6 +181,26 @@ class NavMenu extends React.Component {
             <View />
           </TouchableOpacity>
         </Animated.View>
+        <Animated.View style={[Styles.Menu, {
+          opacity: this._openAnim.interpolate({
+            inputRange: [0.6, 1],
+            outputRange: [0, 1],
+            extrapolate: 'clamp',
+          }),
+        }]} pointerEvents={this.state.open ? 'auto' : 'none'}>
+          <ScrollView style={Styles.MenuScroll} contentContainerStyle={Styles.MenuScrollInner}>
+            {trips.mapEntries(([tripId, trip], i) => ([
+              tripId,
+              <MenuItem
+                trip={trip}
+                onPress={() => this._onTripPress(tripId)}
+                onLongPress={() => this._onTripLongPress(tripId)}
+                key={tripId}
+              />,
+            ])).toArray()}
+            <MenuItem trip={{ name: 'New List' }} onPress={() => this._onPressNewTrip()} />
+          </ScrollView>
+        </Animated.View>
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={this._onButtonPress}
@@ -189,29 +210,6 @@ class NavMenu extends React.Component {
           </UIText>
           <ButtonIcon style={Styles.ButtonIcon} close={this.state.open} />
         </TouchableOpacity>
-        <Animated.View style={[Styles.Menu, {
-          opacity: this._openAnim,
-        }]} pointerEvents={this.state.open ? 'auto' : 'none'}>
-          <View style={Styles.MenuInner}>
-            <InvertibleScrollView inverted={true} showsVerticalScrollIndicator={false} style={Styles.MenuScroll}>
-              {trips.mapEntries(([tripId, trip], i) => ([
-                tripId,
-                <MenuRow
-                  onPress={() => this._onTripPress(tripId)}
-                  onLongPress={() => this._onTripLongPress(tripId)}
-                  isFirstRow={i === 0}
-                  key={tripId}>
-                  {trip.name || 'Untitled'}
-                </MenuRow>,
-              ])).toArray()}
-            </InvertibleScrollView>
-            <View style={Styles.MenuRow}>
-              <TouchableOpacity onPress={this._onPressNewTrip} style={Styles.MenuRowTouchable}>
-                <UIText size="16">New trip</UIText>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Animated.View>
       </View>
     );
   }
@@ -251,39 +249,37 @@ const Styles = StyleSheet.create({
   ButtonText: {
     backgroundColor: 'transparent'
   },
-  MenuScroll: {
-    maxHeight: 4.5 * (Sizes.RowHeight + 1),
-  },
   Menu: {
-    backgroundColor: Colors.White,
-    borderRadius: 10,
-    bottom: 100,
-    left: 24,
-    position: 'absolute',
-    right: ButtonPosition.right,
-    shadowColor: '#000000',
-    shadowOffset: { x: 0, y: 6 },
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
+    ...StyleSheet.absoluteFillObject,
+  },
+  MenuScroll: {
+  },
+  MenuScrollInner: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingVertical: 60,
   },
   MenuInner: {
     borderRadius: 10,
     overflow: 'hidden',
   },
-  MenuRow: {
-    borderTopColor: Colors.LightGrayBorder,
-    borderTopWidth: 1,
-    height: Sizes.RowHeight,
-    justifyContent: 'center',
-    marginLeft: 20,
+  MenuItem: {
+    backgroundColor: Colors.White,
+    borderRadius: 10,
+    height: 140,
+    marginBottom: 24,
+    shadowColor: '#000000',
+    shadowOffset: { x: 0, y: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    width: (WindowWidth - 72) / 2,
   },
-  MenuRowTouchable: {
+  MenuItemTouchable: {
     alignItems: 'center',
     flex: 1,
-    flexDirection: 'row',
-  },
-  MenuFirstRow: {
-    borderTopWidth: 0,
+    paddingTop: 24,
   },
   ButtonIconLine: {
     backgroundColor: 'rgba(255,255,255,0.8)',

@@ -8,6 +8,7 @@ const SUPPORTED_COLORS = {
   black: Colors.Black,
   white: Colors.White,
   lightgray: Colors.LightGray,
+  verylightgray: Colors.VeryLightGray,
 };
 
 const SUPPORTED_FONT_SIZES = {
@@ -15,16 +16,20 @@ const SUPPORTED_FONT_SIZES = {
   '16': 16,
   '18': 18,
   '24': 24,
+  '48': 48,
 };
 
 export default function UIText({ color, size, style, weight, ...props }: {
   color?: $Keys<typeof SUPPORTED_COLORS>,
   size?: $Keys<typeof SUPPORTED_FONT_SIZES>,
   style?: any,
-  weight?: 'regular' | 'medium' | 'semibold',
+  weight?: 'light' | 'regular' | 'medium' | 'semibold',
 }) {
   let styles = [style, Styles.Text];
   switch (weight) {
+  case 'light':
+    styles.push(Fonts.Light);
+    break;
   case 'medium':
     styles.push(Fonts.Medium);
     break;
