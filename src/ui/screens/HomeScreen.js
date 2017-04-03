@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { connect } from 'react-redux';
 
 import TripScreen from './TripScreen';
+import WelcomeScreen from './WelcomeScreen';
 import NavMenu from '../components/NavMenu';
 import user from '../../redux/user';
 
@@ -12,11 +13,16 @@ class HomeScreen extends React.Component {
     selectedTripId: ?string,
   };
 
+  state = {
+    showWelcome: true,
+  };
+
   render() {
     return (
       <View style={{ flex: 1 }}>
-        {this.props.selectedTripId && <TripScreen tripId={this.props.selectedTripId} key={this.props.selectedTripId} />}
+        {!this.state.showWelcome && this.props.selectedTripId && <TripScreen tripId={this.props.selectedTripId} key={this.props.selectedTripId} />}
         <NavMenu />
+        {this.state.showWelcome && <WelcomeScreen dismiss={() => this.setState({ showWelcome: false })} />}
       </View>
     );
   }

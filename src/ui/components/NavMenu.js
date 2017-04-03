@@ -16,9 +16,9 @@ const ButtonPosition = {
   bottom: 38,
   height: 42,
   right: 30,
-  width: 140,
+  width: 42,
 };
-const AnimateDistance = WindowHeight - ButtonPosition.bottom - ButtonPosition.height;
+const AnimateDistance = (WindowHeight - ButtonPosition.bottom - ButtonPosition.height) * 1.1;
 
 class ButtonIcon extends React.Component {
   _anim: Animated.Value;
@@ -205,10 +205,7 @@ class NavMenu extends React.Component {
           activeOpacity={0.85}
           onPress={this._onButtonPress}
           style={Styles.Button}>
-          <UIText color="white" size="14" weight="medium" style={Styles.ButtonText}>
-            {this.state.open ? 'Close' : 'Change trip'}
-          </UIText>
-          <ButtonIcon style={Styles.ButtonIcon} close={this.state.open} />
+          <ButtonIcon close={this.state.open} />
         </TouchableOpacity>
       </View>
     );
@@ -243,12 +240,6 @@ const Styles = StyleSheet.create({
     position: 'absolute',
     right: ButtonPosition.right,
   },
-  ButtonIcon: {
-    marginLeft: 8,
-  },
-  ButtonText: {
-    backgroundColor: 'transparent'
-  },
   Menu: {
     ...StyleSheet.absoluteFillObject,
   },
@@ -271,7 +262,7 @@ const Styles = StyleSheet.create({
     height: 140,
     marginBottom: 24,
     shadowColor: '#000000',
-    shadowOffset: { x: 0, y: 6 },
+    shadowOffset: { x: 0, y: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 16,
     width: (WindowWidth - 72) / 2,
