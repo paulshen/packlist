@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Animated, Button, Image, Keyboard, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, Button, Dimensions, Image, Keyboard, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Colors, Fonts, Sizes } from '../Constants';
@@ -12,18 +12,56 @@ import trips from '../../redux/trips';
 
 type Item = { id: number, checked?: boolean, text: string };
 
-function ItemRow({ item, onPress, onLongPress }: { item: Item, onPress: Function, onLongPress: Function }) {
-  return (
-    <View style={Styles.ItemRow}>
-      {item.checked && <View style={Styles.ItemRowChecked} />}
-      <TouchableOpacity onPress={onPress} onLongPress={onLongPress} activeOpacity={0.6} style={Styles.ItemRowTouchable}>
-        <View>
-          <UIText size="16">{item.text}</UIText>
-        </View>
-        {item.checked && <Image source={require('../../../assets/check.png')} />}
-      </TouchableOpacity>
-    </View>
-  );
+const WindowWidth = Dimensions.get('window').width;
+class ItemRow extends React.Component {
+  props: {
+    item: Item,
+    onPress: Function,
+    onLongPress: Function,
+  };
+  _animatedChecked: Animated.Value;
+
+  constructor(props) {
+    super();
+    this._animatedChecked = new Animated.Value(props.item.checked ? 1 : 0);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.item.checked !== this.props.item.checked) {
+      Animated.timing(this._animatedChecked, {
+        toValue: nextProps.item.checked ? 1 : 0,
+        duration: 200,
+      }).start();
+    }
+  }
+
+  render() {
+    let { item, onPress, onLongPress } = this.props;
+    return (
+      <View style={Styles.ItemRow}>
+        <Animated.View style={[Styles.ItemRowChecked, {
+          transform: [
+            { translateX: this._animatedChecked.interpolate({
+              inputRange: [0, 1],
+              outputRange: [-WindowWidth, 0],
+            }) },
+          ],
+        }]} />
+        <TouchableOpacity onPress={onPress} onLongPress={onLongPress} activeOpacity={0.8} style={Styles.ItemRowTouchable}>
+          <View>
+            <UIText size="16">{item.text}</UIText>
+          </View>
+          <Animated.Image source={require('../../../assets/check.png')} style={{
+            opacity: this._animatedChecked.interpolate({
+              inputRange: [0.5, 1],
+              outputRange: [0, 1],
+              extrapolate: 'clamp',
+            }),
+          }}/>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
 class TripScreen extends React.Component {
