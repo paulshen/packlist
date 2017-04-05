@@ -7,3 +7,9 @@ export function selectTrip(tripId: string) {
     tripId,
   };
 }
+
+export function dismissWelcome() {
+  return {
+    type: t.DISMISS_WELCOME,
+  };
+}

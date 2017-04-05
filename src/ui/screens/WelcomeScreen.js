@@ -14,7 +14,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { connect } from 'react-redux';
 
 import { Colors, Fonts, Sizes } from '../Constants';
 import { UIText } from '../components/Core';

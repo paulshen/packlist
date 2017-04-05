@@ -1,7 +1,10 @@
 /* @flow */
 import * as t from './actionTypes';
 
-const InitialState = {};
+const InitialState = {
+  selectedTripId: null,
+  hasDismissedWelcome: false,
+};
 
 export default function user(state: any = InitialState, action: any) {
   switch (action.type) {
@@ -9,6 +12,11 @@ export default function user(state: any = InitialState, action: any) {
     return {
       ...state,
       selectedTripId: action.tripId,
+    };
+  case t.DISMISS_WELCOME:
+    return {
+      ...state,
+      hasDismissedWelcome: true,
     };
   default:
     return state;

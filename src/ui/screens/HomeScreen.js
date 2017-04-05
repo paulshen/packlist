@@ -12,15 +12,25 @@ import user from '../../redux/user';
 class HomeScreen extends React.Component {
   props: {
     selectedTripId: ?string,
+    hasDismissedWelcome: boolean,
+    dismissWelcome: Function,
   };
   state = {
     rehydrated: false,
-    showWelcome: true,
+    showWelcome: false,
   };
 
   componentDidMount() {
-    StoreReyhdrated.then(() => this.setState({ rehydrated: true }));
+    StoreReyhdrated.then(() => this.setState({
+      rehydrated: true,
+      showWelcome: !this.props.hasDismissedWelcome,
+    }));
   }
+
+  _onDismissWelcome = () => {
+    this.setState({ showWelcome: false });
+    this.props.dismissWelcome();
+  };
 
   render() {
     return (
@@ -35,14 +45,15 @@ class HomeScreen extends React.Component {
             showWelcome={() => this.setState({ showWelcome: true })}
           />}
         {this.state.showWelcome &&
-          <WelcomeScreen
-            dismiss={() => this.setState({ showWelcome: false })}
-          />}
+          <WelcomeScreen dismiss={this._onDismissWelcome} />}
       </View>
     );
   }
 }
 HomeScreen = connect(state => ({
   selectedTripId: user.selectors.getSelectedTripId(state),
+  hasDismissedWelcome: user.selectors.hasDismissedWelcome(state),
+}), (dispatch) => ({
+  dismissWelcome: () => dispatch(user.actions.dismissWelcome()),
 }))(HomeScreen);
 export default HomeScreen;
