@@ -96,8 +96,8 @@ export default class WelcomeScreen extends React.Component {
 
 const Styles = StyleSheet.create({
   Root: {
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: Colors.Blue,
-    flex: 1,
   },
   Top: {
     alignItems: 'center',

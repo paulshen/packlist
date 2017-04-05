@@ -117,15 +117,23 @@ function MenuItem(
       <TouchableOpacity
         onPress={onPress}
         onLongPress={onLongPress}
+        activeOpacity={0.7}
         style={Styles.MenuItemTouchable}>
-        <UIText size="16" weight="medium">{trip.name || 'Untitled'}</UIText>
-        <UIText
-          color="verylightgray"
-          size="48"
-          weight="light"
-          style={Styles.MenuItemNumber}>
-          {trip.items ? trip.items.length : '+'}
-        </UIText>
+        <UIText size="18" weight="medium" style={Styles.MenuItemName}>{trip.name || 'Untitled'}</UIText>
+        <View style={Styles.MenuItemBottom}>
+          {trip.items
+            ? <View style={{alignItems: 'center'}}>
+                <UIText color="lightgray" size="12" weight="light">
+                  {trip.items.filter(i => i.checked).length} checked
+                </UIText>
+                <UIText color="lightgray" size="12" weight="light">
+                  {trip.items.length} item{trip.items.length !== 1 ? 's' : ''}
+                </UIText>
+              </View>
+            : <UIText color="lightgray" size="48" weight="light" style={Styles.MenuItemPlus}>
+                +
+              </UIText>}
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -140,6 +148,7 @@ class NavMenu extends React.Component {
     trips: OrderedMap<string, Object>,
     selectedTripId: ?string,
     getTripName: (tripId: string) => string,
+    showWelcome: Function,
   };
   state: {
     open: boolean,
@@ -277,6 +286,7 @@ class NavMenu extends React.Component {
           ]}
           pointerEvents={this.state.open ? 'auto' : 'none'}>
           <ScrollView
+            showsVerticalScrollIndicator={false}
             style={Styles.MenuScroll}
             contentContainerStyle={Styles.MenuScrollInner}>
             <MenuItem
@@ -294,15 +304,22 @@ class NavMenu extends React.Component {
                 />,
               ])
               .toArray()}
+            <View style={Styles.AboutSection}>
+              <TouchableOpacity onPress={this.props.showWelcome}>
+                <UIText color="white" size="12">Show me that welcome screen again</UIText>
+              </TouchableOpacity>
+              <UIText color="white" size="12">Tweet feedback @_paulshen</UIText>
+            </View>
           </ScrollView>
         </Animated.View>
-        {!this.state.open || this.props.selectedTripId ?
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={this._onButtonPress}
-            style={Styles.Button}>
-            <ButtonIcon close={this.state.open} />
-          </TouchableOpacity> : null}
+        {!this.state.open || this.props.selectedTripId
+          ? <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={this._onButtonPress}
+              style={Styles.Button}>
+              <ButtonIcon close={this.state.open} />
+            </TouchableOpacity>
+          : null}
       </View>
     );
   }
@@ -351,14 +368,10 @@ const Styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 60,
   },
-  MenuInner: {
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
   MenuItem: {
+    aspectRatio: 1.1,
     backgroundColor: Colors.White,
     borderRadius: 10,
-    height: 140,
     marginBottom: 24,
     shadowColor: '#000000',
     shadowOffset: { x: 0, y: 4 },
@@ -369,10 +382,25 @@ const Styles = StyleSheet.create({
   MenuItemTouchable: {
     alignItems: 'center',
     flex: 1,
-    paddingTop: 24,
   },
-  MenuItemNumber: {
-    top: 6,
+  MenuItemName: {
+    paddingHorizontal: 8,
+    paddingTop: 24,
+    textAlign: 'center',
+  },
+  MenuItemBottom: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingBottom: 20,
+  },
+  MenuItemPlus: {
+    top: -4,
+  },
+  AboutSection: {
+    alignItems: 'flex-start',
+    marginVertical: 40,
+    opacity: 0.5,
+    width: WindowWidth,
   },
   ButtonIconLine: {
     backgroundColor: 'rgba(255,255,255,0.8)',

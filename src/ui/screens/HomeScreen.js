@@ -25,13 +25,15 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        {!this.state.showWelcome &&
-          this.props.selectedTripId &&
+        {this.props.selectedTripId &&
           <TripScreen
             tripId={this.props.selectedTripId}
             key={this.props.selectedTripId}
           />}
-        {this.state.rehydrated && <NavMenu />}
+        {this.state.rehydrated &&
+          <NavMenu
+            showWelcome={() => this.setState({ showWelcome: true })}
+          />}
         {this.state.showWelcome &&
           <WelcomeScreen
             dismiss={() => this.setState({ showWelcome: false })}
