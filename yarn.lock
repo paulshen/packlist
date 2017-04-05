@@ -3080,6 +3080,10 @@ react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
 
+react-native-interactable@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/react-native-interactable/-/react-native-interactable-0.0.7.tgz#727582616dbe3706001c810cba42d4b6d27bc494"
+
 react-native-invertible-scroll-view@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-invertible-scroll-view/-/react-native-invertible-scroll-view-1.0.0.tgz#60ceb384dc950c34eba3a5aeda39f97cdc7d4e23"
