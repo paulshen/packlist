@@ -3084,6 +3084,10 @@ react-native-interactable@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/react-native-interactable/-/react-native-interactable-0.0.7.tgz#727582616dbe3706001c810cba42d4b6d27bc494"
 
+"react-native-interactable@https://github.com/wix/react-native-interactable.git#2aa2e5e":
+  version "0.0.7"
+  resolved "https://github.com/wix/react-native-interactable.git#2aa2e5e"
+
 react-native-invertible-scroll-view@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-invertible-scroll-view/-/react-native-invertible-scroll-view-1.0.0.tgz#60ceb384dc950c34eba3a5aeda39f97cdc7d4e23"
