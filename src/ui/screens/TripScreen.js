@@ -362,7 +362,6 @@ const Styles = StyleSheet.create({
   HeaderShadow: {
     backgroundColor: Colors.White,
     height: 1,
-    marginLeft: 20,
     shadowColor: '#000000',
     shadowOffset: { x: 0, y: 6 },
     shadowRadius: 16,
