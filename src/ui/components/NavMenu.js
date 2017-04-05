@@ -1,7 +1,15 @@
 /* @flow */
 import React from 'react';
 import type { OrderedMap } from 'immutable';
-import { Alert, Animated, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  Animated,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { connect } from 'react-redux';
 
 import { Colors, Sizes } from '../Constants';
@@ -18,7 +26,10 @@ const ButtonPosition = {
   right: 30,
   width: 48,
 };
-const AnimateDistance = (WindowHeight - ButtonPosition.bottom - ButtonPosition.height) * 1.1;
+const AnimateDistance = (WindowHeight -
+  ButtonPosition.bottom -
+  ButtonPosition.height) *
+  1.1;
 
 class ButtonIcon extends React.Component {
   _anim: Animated.Value;
@@ -40,45 +51,81 @@ class ButtonIcon extends React.Component {
   render() {
     return (
       <View style={this.props.style}>
-        <Animated.View style={[Styles.ButtonIconLine, {
-          marginBottom: 3,
-          transform: [
-            { translateY: this._anim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0, 5],
-            }) },
-            { rotate: this._anim.interpolate({
-              inputRange: [0, 1],
-              outputRange: ['0deg', '135deg'],
-            }) },
-          ],
-        }]} />
-        <Animated.View style={[Styles.ButtonIconLine, {
-          marginBottom: 3,
-          transform: [{
-            rotate: this._anim.interpolate({
-              inputRange: [0, 1],
-              outputRange: ['0deg', '-135deg'],
-            }),
-          }],
-        }]} />
-        <Animated.View style={[Styles.ButtonIconLine, {
-          opacity: this._anim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [1, 0],
-          }),
-        }]} />
+        <Animated.View
+          style={[
+            Styles.ButtonIconLine,
+            {
+              marginBottom: 3,
+              transform: [
+                {
+                  translateY: this._anim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 5],
+                  }),
+                },
+                {
+                  rotate: this._anim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '135deg'],
+                  }),
+                },
+              ],
+            },
+          ]}
+        />
+        <Animated.View
+          style={[
+            Styles.ButtonIconLine,
+            {
+              marginBottom: 3,
+              transform: [
+                {
+                  rotate: this._anim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '-135deg'],
+                  }),
+                },
+              ],
+            },
+          ]}
+        />
+        <Animated.View
+          style={[
+            Styles.ButtonIconLine,
+            {
+              opacity: this._anim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 0],
+              }),
+            },
+          ]}
+        />
       </View>
     );
   }
 }
 
-function MenuItem({ trip, onPress, onLongPress }: { trip: Object, onPress?: Function, onLongPress?: Function }) {
+function MenuItem(
+  {
+    trip,
+    onPress,
+    onLongPress,
+  }: { trip: Object, onPress?: Function, onLongPress?: Function }
+) {
   return (
     <View style={Styles.MenuItem}>
-      <TouchableOpacity onPress={onPress} onLongPress={onLongPress} style={Styles.MenuItemTouchable}>
+      <TouchableOpacity
+        onPress={onPress}
+        onLongPress={onLongPress}
+        style={Styles.MenuItemTouchable}>
         <UIText size="16" weight="medium">{trip.name || 'Untitled'}</UIText>
-        <UIText color="verylightgray" size="48" weight="light" style={Styles.MenuItemNumber}>{trip.items ? trip.items.length : '+'}</UIText>
+        <UIText
+          color="verylightgray"
+          size="48"
+          weight="light"
+          style={Styles.MenuItemNumber}>
+          {trip.items ? trip.items.length : '+'}
+        </UIText>
       </TouchableOpacity>
     </View>
   );
@@ -102,7 +149,10 @@ class NavMenu extends React.Component {
   _openAnim = new Animated.Value(0);
   _moveTripTimeout: number;
 
-  componentDidUpdate(prevProps: $PropertyType<NavMenu, 'props'>, prevState: $PropertyType<NavMenu, 'state'>) {
+  componentDidUpdate(
+    prevProps: $PropertyType<NavMenu, 'props'>,
+    prevState: $PropertyType<NavMenu, 'state'>
+  ) {
     if (this.state.open !== prevState.open) {
       Animated.timing(this._openAnim, {
         toValue: this.state.open ? 1 : 0,
@@ -120,28 +170,37 @@ class NavMenu extends React.Component {
     });
   };
 
-  _onTripPress = (tripId) => {
+  _onTripPress = tripId => {
     this.props.selectTrip(tripId);
-    this._moveTripTimeout = setTimeout(() => this.props.moveTripToMostRecent(tripId), AnimationDuration);
+    this._moveTripTimeout = setTimeout(
+      () => this.props.moveTripToMostRecent(tripId),
+      AnimationDuration
+    );
     this.setState({
       open: false,
     });
   };
 
-  _onTripLongPress = (tripId) => {
-    Alert.alert(`Are you sure you want to delete ${this.props.getTripName(tripId)}?`, null, [
-      { text: 'Yes', onPress: () => {
-        if (this.props.selectedTripId === tripId) {
-          this.props.selectTrip(null);
-        }
-        this.props.removeTrip(tripId);
-      } },
-      { text: 'No' },
-    ]);
-  }
-
+  _onTripLongPress = tripId => {
+    Alert.alert(
+      `Are you sure you want to delete ${this.props.getTripName(tripId)}?`,
+      null,
+      [
+        { text: 'No' },
+        {
+          text: 'Yes',
+          onPress: () => {
+            if (this.props.selectedTripId === tripId) {
+              this.props.selectTrip(null);
+            }
+            this.props.removeTrip(tripId);
+          },
+        },
+      ]
+    );
+  };
   _onPressNewTrip = () => {
-    this.props.createTrip().then((newTripId) => {
+    this.props.createTrip().then(newTripId => {
       this.props.selectTrip(newTripId);
       this.props.moveTripToMostRecent(newTripId);
       this.setState({
@@ -154,51 +213,81 @@ class NavMenu extends React.Component {
     let { trips } = this.props;
     return (
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
-        <Animated.View style={[Styles.Background, {
-          opacity: this._openAnim.interpolate({
-            inputRange: [0, 0.0001],
-            outputRange: [0, 1],
-            extrapolate: 'clamp',
-          }),
-          bottom: this._openAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [ButtonPosition.bottom, ButtonPosition.bottom - AnimateDistance],
-          }),
-          height: this._openAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [ButtonPosition.height, ButtonPosition.height + 2 * AnimateDistance],
-          }),
-          right: this._openAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [ButtonPosition.right, ButtonPosition.right - AnimateDistance],
-          }),
-          width: this._openAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [ButtonPosition.width, ButtonPosition.width + 2 * AnimateDistance],
-          }),
-        }]}>
-          <TouchableOpacity onPress={this._onButtonPress} style={StyleSheet.absoluteFill}>
+        <Animated.View
+          style={[
+            Styles.Background,
+            {
+              opacity: this._openAnim.interpolate({
+                inputRange: [0, 0.0001],
+                outputRange: [0, 1],
+                extrapolate: 'clamp',
+              }),
+              bottom: this._openAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [
+                  ButtonPosition.bottom,
+                  ButtonPosition.bottom - AnimateDistance,
+                ],
+              }),
+              height: this._openAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [
+                  ButtonPosition.height,
+                  ButtonPosition.height + 2 * AnimateDistance,
+                ],
+              }),
+              right: this._openAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [
+                  ButtonPosition.right,
+                  ButtonPosition.right - AnimateDistance,
+                ],
+              }),
+              width: this._openAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [
+                  ButtonPosition.width,
+                  ButtonPosition.width + 2 * AnimateDistance,
+                ],
+              }),
+            },
+          ]}>
+          <TouchableOpacity
+            onPress={this._onButtonPress}
+            style={StyleSheet.absoluteFill}>
             <View />
           </TouchableOpacity>
         </Animated.View>
-        <Animated.View style={[Styles.Menu, {
-          opacity: this._openAnim.interpolate({
-            inputRange: [0.6, 1],
-            outputRange: [0, 1],
-            extrapolate: 'clamp',
-          }),
-        }]} pointerEvents={this.state.open ? 'auto' : 'none'}>
-          <ScrollView style={Styles.MenuScroll} contentContainerStyle={Styles.MenuScrollInner}>
-            {trips.mapEntries(([tripId, trip], i) => ([
-              tripId,
-              <MenuItem
-                trip={trip}
-                onPress={() => this._onTripPress(tripId)}
-                onLongPress={() => this._onTripLongPress(tripId)}
-                key={tripId}
-              />,
-            ])).toArray()}
-            <MenuItem trip={{ name: 'New List' }} onPress={() => this._onPressNewTrip()} />
+        <Animated.View
+          style={[
+            Styles.Menu,
+            {
+              opacity: this._openAnim.interpolate({
+                inputRange: [0.6, 1],
+                outputRange: [0, 1],
+                extrapolate: 'clamp',
+              }),
+            },
+          ]}
+          pointerEvents={this.state.open ? 'auto' : 'none'}>
+          <ScrollView
+            style={Styles.MenuScroll}
+            contentContainerStyle={Styles.MenuScrollInner}>
+            {trips
+              .mapEntries(([tripId, trip], i) => [
+                tripId,
+                <MenuItem
+                  trip={trip}
+                  onPress={() => this._onTripPress(tripId)}
+                  onLongPress={() => this._onTripLongPress(tripId)}
+                  key={tripId}
+                />,
+              ])
+              .toArray()}
+            <MenuItem
+              trip={{ name: 'New List' }}
+              onPress={() => this._onPressNewTrip()}
+            />
           </ScrollView>
         </Animated.View>
         <TouchableOpacity
@@ -211,16 +300,20 @@ class NavMenu extends React.Component {
     );
   }
 }
-NavMenu = connect((state) => ({
-  selectedTripId: user.selectors.getSelectedTripId(state),
-  trips: trips.selectors.getTrips(state),
-  getTripName: (tripId) => trips.selectors.getTrip(state, tripId).name,
-}), (dispatch) => ({
-  createTrip: () => dispatch(trips.actions.createTrip()),
-  removeTrip: (tripId) => dispatch(trips.actions.removeTrip(tripId)),
-  selectTrip: (tripId) => dispatch(user.actions.selectTrip(tripId)),
-  moveTripToMostRecent: (tripId) => dispatch(trips.actions.moveTripToMostRecent(tripId)),
-}))(NavMenu);
+NavMenu = connect(
+  state => ({
+    selectedTripId: user.selectors.getSelectedTripId(state),
+    trips: trips.selectors.getTrips(state),
+    getTripName: tripId => trips.selectors.getTrip(state, tripId).name,
+  }),
+  dispatch => ({
+    createTrip: () => dispatch(trips.actions.createTrip()),
+    removeTrip: tripId => dispatch(trips.actions.removeTrip(tripId)),
+    selectTrip: tripId => dispatch(user.actions.selectTrip(tripId)),
+    moveTripToMostRecent: tripId =>
+      dispatch(trips.actions.moveTripToMostRecent(tripId)),
+  })
+)(NavMenu);
 export default NavMenu;
 
 const Styles = StyleSheet.create({
@@ -243,8 +336,7 @@ const Styles = StyleSheet.create({
   Menu: {
     ...StyleSheet.absoluteFillObject,
   },
-  MenuScroll: {
-  },
+  MenuScroll: {},
   MenuScrollInner: {
     flexDirection: 'row',
     flexWrap: 'wrap',

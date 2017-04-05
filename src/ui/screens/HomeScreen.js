@@ -20,14 +20,22 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        {!this.state.showWelcome && this.props.selectedTripId && <TripScreen tripId={this.props.selectedTripId} key={this.props.selectedTripId} />}
+        {!this.state.showWelcome &&
+          this.props.selectedTripId &&
+          <TripScreen
+            tripId={this.props.selectedTripId}
+            key={this.props.selectedTripId}
+          />}
         <NavMenu />
-        {this.state.showWelcome && <WelcomeScreen dismiss={() => this.setState({ showWelcome: false })} />}
+        {this.state.showWelcome &&
+          <WelcomeScreen
+            dismiss={() => this.setState({ showWelcome: false })}
+          />}
       </View>
     );
   }
 }
-HomeScreen = connect((state) => ({
+HomeScreen = connect(state => ({
   selectedTripId: user.selectors.getSelectedTripId(state),
 }))(HomeScreen);
 export default HomeScreen;

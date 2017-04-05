@@ -26,6 +26,7 @@ import { UIText } from '../components/Core';
 import AnimatedRow from '../components/AnimatedRow';
 import EmptyTripPrompt from '../components/EmptyTripPrompt';
 import trips from '../../redux/trips';
+import user from '../../redux/user';
 
 type Item = { id: number, checked?: boolean, text: string };
 
@@ -133,6 +134,8 @@ class TripScreen extends React.Component {
     trip: Object,
     setTripTitle: (title: string) => void,
     setTripItems: (items: any) => void,
+    removeTrip: (tripId: string) => void,
+    selectTrip: (tripId: ?string) => void,
     showActionSheetWithOptions: Function,
   };
 
@@ -212,6 +215,22 @@ class TripScreen extends React.Component {
                 ...item,
                 checked: false,
               }))
+            );
+            break;
+          case 1:
+            Alert.alert(
+              `Are you sure you want to delete ${this.props.trip.name}?`,
+              null,
+              [
+                { text: 'No' },
+                {
+                  text: 'Yes',
+                  onPress: () => {
+                    this.props.selectTrip(null);
+                    this.props.removeTrip(this.props.tripId);
+                  },
+                },
+              ]
             );
             break;
         }
@@ -325,6 +344,8 @@ TripScreen = compose(
         dispatch(trips.actions.setTripTitle(ownProps.tripId, title)),
       setTripItems: items =>
         dispatch(trips.actions.setTripItems(ownProps.tripId, items)),
+      removeTrip: tripId => dispatch(trips.actions.removeTrip(tripId)),
+      selectTrip: tripId => dispatch(user.actions.selectTrip(tripId)),
     })
   )
 )(TripScreen);
