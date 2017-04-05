@@ -12,6 +12,7 @@
 		"react": "~15.4.0-rc.4",
 		"react-native": "0.42.3",
 		"react-native-invertible-scroll-view": "^1.0.0",
+		"react-native-vector-icons": "^4.0.1",
 		"react-redux": "^4.4.6",
 		"redux": "^3.6.0",
 		"redux-persist": "^4.0.0-beta1",

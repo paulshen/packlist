@@ -3,6 +3,7 @@
 import React from 'react';
 import { Animated, Button, Dimensions, Image, Keyboard, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { Colors, Fonts, Sizes } from '../Constants';
 import { UIText } from '../components/Core';
