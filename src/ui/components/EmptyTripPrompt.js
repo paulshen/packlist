@@ -26,47 +26,62 @@ class EmptyTripPrompt extends React.Component {
     style?: any,
   };
 
-  _onTripPress = (trip) => {
-    this.props.setTripItems(trip.items.map((item) => ({
-      ...item,
-      checked: false,
-    })));
+  _onTripPress = trip => {
+    this.props.setTripItems(
+      trip.items.map(item => ({
+        ...item,
+        checked: false,
+      }))
+    );
   };
 
   render() {
-    let items = this.props.trips.map((trip, tripId) => {
-      if (tripId === this.props.tripId) {
-        return null;
-      }
-      return <Row onPress={() => this._onTripPress(trip)} key={tripId}>{trip.name || 'Untitled'}</Row>;
-    }).toArray();
+    let { trips } = this.props;
+    let filteredTrips = trips.filter(
+      (trip, tripId) => tripId !== this.props.tripId
+    );
+    if (filteredTrips.count() === 0) {
+      return null;
+    }
 
     return (
       <View style={[Styles.Root, this.props.style]}>
-        <UIText color="lightgray" size="16" weight="semibold" style={Styles.Prompt}>Or copy from another trip</UIText>
-        {items}
+        <UIText color="lightgray" size="12" style={Styles.Prompt}>
+          Copy items from another list
+        </UIText>
+        {filteredTrips
+          .map((trip, tripId) => (
+            <Row onPress={() => this._onTripPress(trip)} key={tripId}>
+              {trip.name || 'Untitled'}
+            </Row>
+          ))
+          .toArray()}
       </View>
     );
   }
 }
-EmptyTripPrompt = connect((state, ownProps) => ({
-  trips: trips.selectors.getTrips(state),
-}), (dispatch, ownProps) => ({
-  setTripItems: (items) => dispatch(trips.actions.setTripItems(ownProps.tripId, items)),
-}))(EmptyTripPrompt);
+EmptyTripPrompt = connect(
+  (state, ownProps) => ({
+    trips: trips.selectors.getTrips(state),
+  }),
+  (dispatch, ownProps) => ({
+    setTripItems: items =>
+      dispatch(trips.actions.setTripItems(ownProps.tripId, items)),
+  })
+)(EmptyTripPrompt);
 export default EmptyTripPrompt;
 
 const Styles = StyleSheet.create({
-  Root: {
-    paddingLeft: 30,
-  },
+  Root: {},
   Prompt: {
     marginBottom: 10,
+    marginLeft: 30,
   },
   Row: {
     borderBottomColor: Colors.LightGrayBorder,
     borderBottomWidth: 1,
     height: Sizes.RowHeight,
+    paddingLeft: 30,
   },
   RowTouchable: {
     flex: 1,

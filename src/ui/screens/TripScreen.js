@@ -177,8 +177,9 @@ class TripScreen extends React.Component {
                   style={Styles.AddInput}
                 />
                 {this.state.newItemText ?
-                  <Button title="Cancel" onPress={this._onCancelAddPress} />
-                : null}
+                  <TouchableOpacity onPress={this._onCancelAddPress}>
+                    <UIText color="lightgray" size="16">Cancel</UIText>
+                  </TouchableOpacity> : null}
               </View>
             </View>
             {emptyTripPrompt}
@@ -271,10 +272,8 @@ const Styles = StyleSheet.create({
     color: Colors.Black,
     flex: 1,
     fontSize: 16,
-    height: 32,
-    top: 7,
   },
   EmptyTripPrompt: {
-    top: Sizes.RowHeight * 2,
+    top: Sizes.RowHeight * 3,
   },
 });
