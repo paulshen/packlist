@@ -125,10 +125,10 @@ function MenuItem(
           {trip.items
             ? <View style={{alignItems: 'center'}}>
                 <UIText color="lightgray" size="12" weight="light">
-                  {trip.items.filter(i => i.checked).length} checked
+                  {trip.items.length} item{trip.items.length !== 1 ? 's' : ''}
                 </UIText>
                 <UIText color="lightgray" size="12" weight="light">
-                  {trip.items.length} item{trip.items.length !== 1 ? 's' : ''}
+                  {trip.items.filter(i => i.checked).length} checked
                 </UIText>
               </View>
             : <UIText color="lightgray" size="48" weight="light" style={Styles.MenuItemPlus}>
@@ -199,7 +199,7 @@ class NavMenu extends React.Component {
 
   _onTripLongPress = tripId => {
     Alert.alert(
-      `Are you sure you want to delete ${this.props.getTripName(tripId)}?`,
+      `Are you sure you want to delete ${this.props.getTripName(tripId) || 'this list'}?`,
       null,
       [
         { text: 'No' },
