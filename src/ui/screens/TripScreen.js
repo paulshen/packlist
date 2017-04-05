@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {
+  Alert,
   Animated,
   Button,
   Dimensions,
@@ -33,10 +34,10 @@ class ItemRow extends React.Component {
   props: {
     item: Item,
     onPress: Function,
-    onDeletePress: Function,
-    onLongPress: Function,
+    onDelete: Function,
   };
   _animatedChecked: Animated.Value;
+  _interactable: Interactable.View;
   _deltaX = new Animated.Value(0);
 
   constructor(props) {
@@ -53,26 +54,39 @@ class ItemRow extends React.Component {
     }
   }
 
+  _onSnap = ({ nativeEvent: { id } }) => {
+    if (id === 'delete') {
+      Alert.alert('Delete this item?', null, [
+        {
+          text: 'Cancel',
+          onPress: () => this._interactable.snapTo({ index: 0 }),
+        },
+        { text: 'Yes', onPress: this.props.onDelete },
+      ]);
+    }
+  };
+
   render() {
-    let { item, onPress, onDeletePress, onLongPress } = this.props;
+    let { item, onPress } = this.props;
     return (
       <View style={Styles.ItemRow}>
-        <TouchableOpacity onPress={onDeletePress} style={Styles.ItemRowDelete}>
+        <View style={Styles.ItemRowDelete}>
           <Icon name="delete" size={24} color={Colors.White} />
-        </TouchableOpacity>
+        </View>
         <Interactable.View
           boundaries={{ right: 0 }}
           snapPoints={[
             { x: 0, damping: 0.5, tension: 600 },
-            { x: -50, damping: 0.5, tension: 600 },
+            { id: 'delete', x: -50, damping: 0.5, tension: 600 },
           ]}
+          onSnap={this._onSnap}
           dragToss={0.1}
           horizontalOnly={true}
           animatedValueX={this._deltaX}
+          ref={c => this._interactable = c}
           style={Styles.ItemRowInteractable}>
           <TouchableHighlight
             onPress={onPress}
-            onLongPress={onLongPress}
             underlayColor="#fcfcfc"
             activeOpacity={0.9}
             style={Styles.ItemRowTouchable}>
@@ -289,8 +303,7 @@ class TripScreen extends React.Component {
                   <ItemRow
                     item={item}
                     onPress={() => this._onItemPress(item)}
-                    onDeletePress={() => this._deleteItem(item)}
-                    onLongPress={() => this._deleteItem(item)}
+                    onDelete={() => this._deleteItem(item)}
                   />
                 </AnimatedRow>
               );
