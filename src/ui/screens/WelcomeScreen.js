@@ -18,7 +18,7 @@ import {
 import { Colors, Fonts, Sizes } from '../Constants';
 import { UIText } from '../components/Core';
 
-const ItemScrollerImageWidth = 375;
+const ItemScrollerImageWidth = 500;
 class ItemScroller extends React.Component {
   _anim = new Animated.Value(0);
   _timeout: number;
