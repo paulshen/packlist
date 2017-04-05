@@ -7,6 +7,7 @@ import {
   Dimensions,
   Linking,
   ScrollView,
+  StatusBar,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -229,6 +230,7 @@ class NavMenu extends React.Component {
     let { trips } = this.props;
     return (
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+        <StatusBar barStyle={this.state.open ? 'light-content' : 'default'} animated={true} />
         <Animated.View
           style={[
             Styles.Background,
