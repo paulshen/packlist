@@ -7,17 +7,23 @@ import thunk from 'redux-thunk';
 import trips from './trips';
 import user from './user';
 
-const RootReducer = combineReducers(
-  {
-    [trips.constants.NAME]: trips.reducer,
-    [user.constants.NAME]: user.reducer,
-  }
-);
+const RootReducer = combineReducers({
+  [trips.constants.NAME]: trips.reducer,
+  [user.constants.NAME]: user.reducer,
+});
 
-export const Store = createStore(RootReducer, undefined, compose(
-  applyMiddleware(thunk),
-  autoRehydrate()
-));
-persistStore(Store, { storage: AsyncStorage, transforms: [immutableTransform({
-  whitelist: [trips.constants.NAME],
-})] });
+export const Store = createStore(
+  RootReducer,
+  undefined,
+  compose(applyMiddleware(thunk), autoRehydrate())
+);
+export const StoreReyhdrated = new Promise((resolve, reject) => {
+  persistStore(Store, {
+    storage: AsyncStorage,
+    transforms: [
+      immutableTransform({
+        whitelist: [trips.constants.NAME],
+      }),
+    ],
+  }, resolve);
+});

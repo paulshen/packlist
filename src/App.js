@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 import HomeScreen from './ui/screens/HomeScreen';
-import { Store } from './redux';
+import { Store, StoreReyhdrated } from './redux';
 
 export default class App extends React.Component {
   render() {

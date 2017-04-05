@@ -219,7 +219,7 @@ class TripScreen extends React.Component {
             break;
           case 1:
             Alert.alert(
-              `Are you sure you want to delete ${this.props.trip.name}?`,
+              `Are you sure you want to delete ${this.props.trip.name || 'this list'}?`,
               null,
               [
                 { text: 'No' },
@@ -255,7 +255,7 @@ class TripScreen extends React.Component {
           <TextInput
             value={this.props.trip.name}
             onChangeText={this._onChangeTitleText}
-            placeholder="Name your trip"
+            placeholder="Name your list"
             ref={c => this._titleInput = c}
             style={Styles.HeaderInput}
           />

@@ -6,16 +6,21 @@ import { connect } from 'react-redux';
 import TripScreen from './TripScreen';
 import WelcomeScreen from './WelcomeScreen';
 import NavMenu from '../components/NavMenu';
+import { StoreReyhdrated } from '../../redux';
 import user from '../../redux/user';
 
 class HomeScreen extends React.Component {
   props: {
     selectedTripId: ?string,
   };
-
   state = {
+    rehydrated: false,
     showWelcome: true,
   };
+
+  componentDidMount() {
+    StoreReyhdrated.then(() => this.setState({ rehydrated: true }));
+  }
 
   render() {
     return (
@@ -26,7 +31,7 @@ class HomeScreen extends React.Component {
             tripId={this.props.selectedTripId}
             key={this.props.selectedTripId}
           />}
-        <NavMenu />
+        {this.state.rehydrated && <NavMenu />}
         {this.state.showWelcome &&
           <WelcomeScreen
             dismiss={() => this.setState({ showWelcome: false })}

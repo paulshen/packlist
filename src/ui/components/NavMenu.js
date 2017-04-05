@@ -141,13 +141,26 @@ class NavMenu extends React.Component {
     selectedTripId: ?string,
     getTripName: (tripId: string) => string,
   };
-
-  state = {
-    open: false,
+  state: {
+    open: boolean,
   };
+  _openAnim: Animated.Value;
 
-  _openAnim = new Animated.Value(0);
-  _moveTripTimeout: number;
+  constructor(props) {
+    super();
+    this.state = {
+      open: !props.selectedTripId,
+    };
+    this._openAnim = new Animated.Value(this.state.open ? 1 : 0);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.selectedTripId && !!this.props.selectedTripId) {
+      this.setState({
+        open: true,
+      });
+    }
+  }
 
   componentDidUpdate(
     prevProps: $PropertyType<NavMenu, 'props'>,
@@ -162,9 +175,6 @@ class NavMenu extends React.Component {
   }
 
   _onButtonPress = () => {
-    if (!this.state.open && this._moveTripTimeout) {
-      clearTimeout(this._moveTripTimeout);
-    }
     this.setState({
       open: !this.state.open,
     });
@@ -172,10 +182,6 @@ class NavMenu extends React.Component {
 
   _onTripPress = tripId => {
     this.props.selectTrip(tripId);
-    this._moveTripTimeout = setTimeout(
-      () => this.props.moveTripToMostRecent(tripId),
-      AnimationDuration
-    );
     this.setState({
       open: false,
     });
@@ -273,6 +279,10 @@ class NavMenu extends React.Component {
           <ScrollView
             style={Styles.MenuScroll}
             contentContainerStyle={Styles.MenuScrollInner}>
+            <MenuItem
+              trip={{ name: 'New List' }}
+              onPress={() => this._onPressNewTrip()}
+            />
             {trips
               .mapEntries(([tripId, trip], i) => [
                 tripId,
@@ -284,10 +294,6 @@ class NavMenu extends React.Component {
                 />,
               ])
               .toArray()}
-            <MenuItem
-              trip={{ name: 'New List' }}
-              onPress={() => this._onPressNewTrip()}
-            />
           </ScrollView>
         </Animated.View>
         <TouchableOpacity
