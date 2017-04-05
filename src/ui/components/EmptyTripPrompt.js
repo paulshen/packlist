@@ -11,7 +11,7 @@ import trips from '../../redux/trips';
 function Row({ children, onPress }) {
   return (
     <View style={Styles.Row}>
-      <TouchableOpacity onPress={onPress} style={Styles.RowTouchable}>
+      <TouchableOpacity activeOpacity={0.6} onPress={onPress} style={Styles.RowTouchable}>
         <UIText size="16">{children}</UIText>
       </TouchableOpacity>
     </View>

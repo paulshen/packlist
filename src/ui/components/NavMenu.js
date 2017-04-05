@@ -117,7 +117,7 @@ function MenuItem(
       <TouchableOpacity
         onPress={onPress}
         onLongPress={onLongPress}
-        activeOpacity={0.7}
+        activeOpacity={0.6}
         style={Styles.MenuItemTouchable}>
         <UIText size="18" weight="medium" style={Styles.MenuItemName}>{trip.name || 'Untitled'}</UIText>
         <View style={Styles.MenuItemBottom}>

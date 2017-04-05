@@ -203,7 +203,7 @@ class TripScreen extends React.Component {
   _onSettingsPress = () => {
     this.props.showActionSheetWithOptions(
       {
-        options: ['Uncheck all', 'Delete list', 'Cancel'],
+        options: ['Uncheck all items', 'Delete list', 'Cancel'],
         cancelButtonIndex: 2,
         destructiveButtonIndex: 1,
       },
@@ -242,10 +242,7 @@ class TripScreen extends React.Component {
     let emptyTripPrompt;
     if (this.props.trip.items.length === 0) {
       emptyTripPrompt = (
-        <EmptyTripPrompt
-          tripId={this.props.tripId}
-          style={Styles.EmptyTripPrompt}
-        />
+        <EmptyTripPrompt tripId={this.props.tripId} />
       );
     }
 
@@ -287,7 +284,7 @@ class TripScreen extends React.Component {
             style={[
               Styles.Body,
               {
-                height: (this.props.trip.items.length + 2) * Sizes.RowHeight,
+                height: (this.props.trip.items.length + 1) * Sizes.RowHeight,
               },
             ]}>
             <View style={Styles.Row}>
@@ -314,7 +311,6 @@ class TripScreen extends React.Component {
                   : null}
               </View>
             </View>
-            {emptyTripPrompt}
             {this.props.trip.items.map((item, i) => {
               let y = (i + 1) * Sizes.RowHeight;
               return (
@@ -328,6 +324,7 @@ class TripScreen extends React.Component {
               );
             })}
           </View>
+          {emptyTripPrompt}
         </ScrollView>
       </View>
     );
@@ -437,8 +434,5 @@ const Styles = StyleSheet.create({
     color: Colors.Black,
     flex: 1,
     fontSize: 16,
-  },
-  EmptyTripPrompt: {
-    top: Sizes.RowHeight * 3,
   },
 });
