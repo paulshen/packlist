@@ -94,7 +94,7 @@ class ButtonIcon extends React.Component {
             Styles.ButtonIconLine,
             {
               opacity: this._anim.interpolate({
-                inputRange: [0, 1],
+                inputRange: [0, 0.5],
                 outputRange: [1, 0],
               }),
             },
@@ -296,12 +296,13 @@ class NavMenu extends React.Component {
               .toArray()}
           </ScrollView>
         </Animated.View>
-        <TouchableOpacity
-          activeOpacity={0.85}
-          onPress={this._onButtonPress}
-          style={Styles.Button}>
-          <ButtonIcon close={this.state.open} />
-        </TouchableOpacity>
+        {!this.state.open || this.props.selectedTripId ?
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={this._onButtonPress}
+            style={Styles.Button}>
+            <ButtonIcon close={this.state.open} />
+          </TouchableOpacity> : null}
       </View>
     );
   }
