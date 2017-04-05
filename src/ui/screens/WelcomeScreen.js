@@ -10,6 +10,7 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
+  TouchableHighlight,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -68,21 +69,27 @@ export default class WelcomeScreen extends React.Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={this.props.dismiss}>
-        <View style={Styles.Root}>
-          <StatusBar barStyle="light-content" />
-          <View style={Styles.Top}>
-            <UIText color="white" size="28" style={Styles.TopText}>
-              Packlist
-            </UIText>
-            <View style={Styles.TopDivider} />
-            <UIText color="white" size="16" style={Styles.TopText}>
-              {'A simple checklist\nfor stress-free travels'}
-            </UIText>
-          </View>
-          <ItemScroller />
+      <View style={Styles.Root}>
+        <StatusBar barStyle="light-content" />
+        <View style={Styles.Top}>
+          <UIText color="white" size="28" style={Styles.TopText}>
+            Packlist
+          </UIText>
+          <View style={Styles.TopDivider} />
+          <UIText color="white" size="14" style={Styles.TopText}>
+            {'A simple checklist\nfor stress-free travels'}
+          </UIText>
         </View>
-      </TouchableWithoutFeedback>
+        <ItemScroller />
+        <TouchableHighlight
+          underlayColor="#FFFFFF08"
+          onPress={this.props.dismiss}
+          style={Styles.Continue}>
+          <View>
+            <UIText color="white" size="14" weight="medium">Continue</UIText>
+          </View>
+        </TouchableHighlight>
+      </View>
     );
   }
 }
@@ -112,5 +119,17 @@ const Styles = StyleSheet.create({
   },
   ItemScrollerStrip: {
     flexDirection: 'row',
+  },
+  Continue: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: '#FFFFFF10',
+    borderColor: '#FFFFFF60',
+    borderRadius: 6,
+    borderWidth: 1,
+    justifyContent: 'center',
+    marginBottom: 24,
+    paddingHorizontal: 28,
+    paddingVertical: 12,
   },
 });
