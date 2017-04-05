@@ -10,6 +10,7 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
+  TouchableHighlight,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -17,6 +18,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { connectActionSheet } from '@expo/react-native-action-sheet';
+import Interactable from 'react-native-interactable';
 
 import { Colors, Fonts, Sizes } from '../Constants';
 import { UIText } from '../components/Core';
@@ -31,9 +33,11 @@ class ItemRow extends React.Component {
   props: {
     item: Item,
     onPress: Function,
+    onDeletePress: Function,
     onLongPress: Function,
   };
   _animatedChecked: Animated.Value;
+  _deltaX = new Animated.Value(0);
 
   constructor(props) {
     super();
@@ -50,43 +54,60 @@ class ItemRow extends React.Component {
   }
 
   render() {
-    let { item, onPress, onLongPress } = this.props;
+    let { item, onPress, onDeletePress, onLongPress } = this.props;
     return (
       <View style={Styles.ItemRow}>
-        <Animated.View
-          style={[
-            Styles.ItemRowChecked,
-            {
-              transform: [
-                {
-                  translateX: this._animatedChecked.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [-WindowWidth, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-        />
-        <TouchableOpacity
-          onPress={onPress}
-          onLongPress={onLongPress}
-          activeOpacity={0.8}
-          style={Styles.ItemRowTouchable}>
-          <View>
-            <UIText size="16">{item.text}</UIText>
-          </View>
-          <Animated.Image
-            source={require('../../../assets/check.png')}
-            style={{
-              opacity: this._animatedChecked.interpolate({
-                inputRange: [0.5, 1],
-                outputRange: [0, 1],
-                extrapolate: 'clamp',
-              }),
-            }}
-          />
+        <TouchableOpacity onPress={onDeletePress} style={Styles.ItemRowDelete}>
+          <Icon name="delete" size={24} color={Colors.White} />
         </TouchableOpacity>
+        <Interactable.View
+          boundaries={{ right: 0 }}
+          snapPoints={[
+            { x: 0, damping: 0.5, tension: 600 },
+            { x: -50, damping: 0.5, tension: 600 },
+          ]}
+          dragToss={0.1}
+          horizontalOnly={true}
+          animatedValueX={this._deltaX}
+          style={Styles.ItemRowInteractable}>
+          <TouchableHighlight
+            onPress={onPress}
+            onLongPress={onLongPress}
+            underlayColor="#fcfcfc"
+            activeOpacity={0.9}
+            style={Styles.ItemRowTouchable}>
+            <View style={Styles.ItemRowTouchableInner}>
+              <Animated.View
+                style={[
+                  Styles.ItemRowChecked,
+                  {
+                    transform: [
+                      {
+                        translateX: this._animatedChecked.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [-WindowWidth, 0],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              />
+              <View>
+                <UIText size="16">{item.text}</UIText>
+              </View>
+              <Animated.Image
+                source={require('../../../assets/check.png')}
+                style={{
+                  opacity: this._animatedChecked.interpolate({
+                    inputRange: [0.5, 1],
+                    outputRange: [0, 1],
+                    extrapolate: 'clamp',
+                  }),
+                }}
+              />
+            </View>
+          </TouchableHighlight>
+        </Interactable.View>
       </View>
     );
   }
@@ -154,7 +175,7 @@ class TripScreen extends React.Component {
     this.props.setTripItems(items);
   };
 
-  _onItemLongPress = (item: Item) => {
+  _deleteItem = (item: Item) => {
     this.props.setTripItems(this.props.trip.items.filter(i => i !== item));
   };
 
@@ -268,7 +289,8 @@ class TripScreen extends React.Component {
                   <ItemRow
                     item={item}
                     onPress={() => this._onItemPress(item)}
-                    onLongPress={() => this._onItemLongPress(item)}
+                    onDeletePress={() => this._deleteItem(item)}
+                    onLongPress={() => this._deleteItem(item)}
                   />
                 </AnimatedRow>
               );
@@ -337,26 +359,43 @@ const Styles = StyleSheet.create({
     right: 0,
   },
   ItemRow: {
-    alignItems: 'center',
+    backgroundColor: '#ee98aa',
     borderBottomWidth: 1,
     borderBottomColor: Colors.LightGrayBorder,
     flex: 1,
-    flexDirection: 'row',
-    paddingLeft: 30,
   },
   ItemRowChecked: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: '#F5F9FD',
   },
+  ItemRowInteractable: {
+    flex: 1,
+  },
   ItemRowTouchable: {
+    backgroundColor: '#ffffff',
+    flex: 1,
+  },
+  ItemRowTouchableInner: {
     alignItems: 'center',
-    alignSelf: 'stretch',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingRight: 30,
+    paddingHorizontal: 30,
+  },
+  ItemRowDelete: {
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: 50,
   },
   AddItemRow: {
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    flexDirection: 'row',
+    paddingLeft: 30,
     paddingRight: 20,
   },
   AddInput: {
