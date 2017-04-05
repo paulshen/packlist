@@ -14,9 +14,9 @@ const WindowWidth = Dimensions.get('window').width;
 const AnimationDuration = 200;
 const ButtonPosition = {
   bottom: 38,
-  height: 42,
+  height: 48,
   right: 30,
-  width: 42,
+  width: 48,
 };
 const AnimateDistance = (WindowHeight - ButtonPosition.bottom - ButtonPosition.height) * 1.1;
 
@@ -78,7 +78,7 @@ function MenuItem({ trip, onPress, onLongPress }: { trip: Object, onPress?: Func
     <View style={Styles.MenuItem}>
       <TouchableOpacity onPress={onPress} onLongPress={onLongPress} style={Styles.MenuItemTouchable}>
         <UIText size="16" weight="medium">{trip.name || 'Untitled'}</UIText>
-        <UIText color="verylightgray" size="48" weight="light">{trip.items ? trip.items.length : '+'}</UIText>
+        <UIText color="verylightgray" size="48" weight="light" style={Styles.MenuItemNumber}>{trip.items ? trip.items.length : '+'}</UIText>
       </TouchableOpacity>
     </View>
   );
@@ -234,11 +234,11 @@ const Styles = StyleSheet.create({
     backgroundColor: Colors.Blue,
     borderRadius: ButtonPosition.height / 2,
     bottom: ButtonPosition.bottom,
-    flexDirection: 'row',
     height: ButtonPosition.height,
-    paddingHorizontal: 14,
+    justifyContent: 'center',
     position: 'absolute',
     right: ButtonPosition.right,
+    width: ButtonPosition.width,
   },
   Menu: {
     ...StyleSheet.absoluteFillObject,
@@ -271,6 +271,9 @@ const Styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     paddingTop: 24,
+  },
+  MenuItemNumber: {
+    top: 6,
   },
   ButtonIconLine: {
     backgroundColor: 'rgba(255,255,255,0.8)',
