@@ -12,8 +12,12 @@ export default function trips(state: any, action: any) {
         items: ['Hat', 'Water', 'Snacks', 'Hiking poles', 'Hiking boots'].map((item, i) => ({ id: i + 1, text: item })),
       },
       [guid()]: {
-        name: 'Ski Trip',
-        items: ['Skis', 'Ski poles', 'Helmet', 'Goggles', 'Ski gloves'].map((item, i) => ({ id: i + 1, text: item })),
+        name: 'Skiing',
+        items: ['Skis', 'Ski poles', 'Ski boots', 'Helmet', 'Goggles', 'Ski gloves'].map((item, i) => ({ id: i + 1, text: item })),
+      },
+      [guid()]: {
+        name: 'Travel',
+        items: ['Toothpaste', 'Toothbrush', 'Camera', 'Camera charger', 'Contacts', 'Kindle'].map((item, i) => ({ id: i + 1, text: item })),
       },
     });
   }
