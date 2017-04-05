@@ -20,6 +20,7 @@ import { UIText } from '../components/Core';
 
 class ItemScroller extends React.Component {
   _anim = new Animated.Value(0);
+  _timeout: number;
 
   componentDidMount() {
     this._loop();
