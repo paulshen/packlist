@@ -5,6 +5,7 @@ import {
   Alert,
   Animated,
   Dimensions,
+  Linking,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -305,10 +306,12 @@ class NavMenu extends React.Component {
               ])
               .toArray()}
             <View style={Styles.AboutSection}>
-              <TouchableOpacity onPress={this.props.showWelcome}>
-                <UIText color="white" size="12">Show me that welcome screen again</UIText>
+              <TouchableOpacity activeOpacity={0.6} onPress={this.props.showWelcome}>
+                <UIText color="white" size="12">Show me that welcome screen again!</UIText>
               </TouchableOpacity>
-              <UIText color="white" size="12">Tweet feedback @_paulshen</UIText>
+              <TouchableOpacity activeOpacity={0.6} onPress={() => Linking.openURL('https://twitter.com/_paulshen')}>
+                <UIText color="white" size="12">Tweet feedback @_paulshen</UIText>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </Animated.View>
