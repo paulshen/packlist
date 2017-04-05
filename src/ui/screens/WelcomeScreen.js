@@ -18,6 +18,7 @@ import {
 import { Colors, Fonts, Sizes } from '../Constants';
 import { UIText } from '../components/Core';
 
+const ItemScrollerImageWidth = 375;
 class ItemScroller extends React.Component {
   _anim = new Animated.Value(0);
   _timeout: number;
@@ -47,7 +48,7 @@ class ItemScroller extends React.Component {
                 {
                   translateX: this._anim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [0, -Dimensions.get('window').width],
+                    outputRange: [0, -ItemScrollerImageWidth],
                   }),
                 },
               ],
