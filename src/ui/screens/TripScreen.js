@@ -1,9 +1,22 @@
 /* @flow */
 
 import React from 'react';
-import { Animated, Button, Dimensions, Image, Keyboard, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Animated,
+  Button,
+  Dimensions,
+  Image,
+  Keyboard,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { connectActionSheet } from '@expo/react-native-action-sheet';
 
 import { Colors, Fonts, Sizes } from '../Constants';
 import { UIText } from '../components/Core';
@@ -40,25 +53,39 @@ class ItemRow extends React.Component {
     let { item, onPress, onLongPress } = this.props;
     return (
       <View style={Styles.ItemRow}>
-        <Animated.View style={[Styles.ItemRowChecked, {
-          transform: [
-            { translateX: this._animatedChecked.interpolate({
-              inputRange: [0, 1],
-              outputRange: [-WindowWidth, 0],
-            }) },
-          ],
-        }]} />
-        <TouchableOpacity onPress={onPress} onLongPress={onLongPress} activeOpacity={0.8} style={Styles.ItemRowTouchable}>
+        <Animated.View
+          style={[
+            Styles.ItemRowChecked,
+            {
+              transform: [
+                {
+                  translateX: this._animatedChecked.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [-WindowWidth, 0],
+                  }),
+                },
+              ],
+            },
+          ]}
+        />
+        <TouchableOpacity
+          onPress={onPress}
+          onLongPress={onLongPress}
+          activeOpacity={0.8}
+          style={Styles.ItemRowTouchable}>
           <View>
             <UIText size="16">{item.text}</UIText>
           </View>
-          <Animated.Image source={require('../../../assets/check.png')} style={{
-            opacity: this._animatedChecked.interpolate({
-              inputRange: [0.5, 1],
-              outputRange: [0, 1],
-              extrapolate: 'clamp',
-            }),
-          }}/>
+          <Animated.Image
+            source={require('../../../assets/check.png')}
+            style={{
+              opacity: this._animatedChecked.interpolate({
+                inputRange: [0.5, 1],
+                outputRange: [0, 1],
+                extrapolate: 'clamp',
+              }),
+            }}
+          />
         </TouchableOpacity>
       </View>
     );
@@ -71,6 +98,7 @@ class TripScreen extends React.Component {
     trip: Object,
     setTripTitle: (title: string) => void,
     setTripItems: (items: any) => void,
+    showActionSheetWithOptions: Function,
   };
 
   state = {
@@ -87,18 +115,21 @@ class TripScreen extends React.Component {
     }
   }
 
-  _onChangeTitleText = (text) => {
+  _onChangeTitleText = text => {
     this.props.setTripTitle(text);
   };
 
-  _onChangeNewItemText = (text) => {
+  _onChangeNewItemText = text => {
     this.setState({
       newItemText: text,
     });
   };
 
   _addItem = () => {
-    let nextId = Math.max.apply(null, [...this.props.trip.items.map(item => item.id), 0]) + 1;
+    let nextId = Math.max.apply(null, [
+      ...this.props.trip.items.map(item => item.id),
+      0,
+    ]) + 1;
     let newItem = {
       id: nextId,
       text: this.state.newItemText,
@@ -127,14 +158,41 @@ class TripScreen extends React.Component {
     this.props.setTripItems(this.props.trip.items.filter(i => i !== item));
   };
 
-  _onScroll = (e) => {
+  _onScroll = e => {
     this._scrollAnim.setValue(e.nativeEvent.contentOffset.y / Sizes.RowHeight);
+  };
+
+  _onSettingsPress = () => {
+    this.props.showActionSheetWithOptions(
+      {
+        options: ['Uncheck all', 'Delete list', 'Cancel'],
+        cancelButtonIndex: 2,
+        destructiveButtonIndex: 1,
+      },
+      buttonIndex => {
+        switch (buttonIndex) {
+          case 0:
+            this.props.setTripItems(
+              this.props.trip.items.map(item => ({
+                ...item,
+                checked: false,
+              }))
+            );
+            break;
+        }
+      }
+    );
   };
 
   render() {
     let emptyTripPrompt;
     if (this.props.trip.items.length === 0) {
-      emptyTripPrompt = <EmptyTripPrompt tripId={this.props.tripId} style={Styles.EmptyTripPrompt} />;
+      emptyTripPrompt = (
+        <EmptyTripPrompt
+          tripId={this.props.tripId}
+          style={Styles.EmptyTripPrompt}
+        />
+      );
     }
 
     return (
@@ -147,28 +205,46 @@ class TripScreen extends React.Component {
             ref={c => this._titleInput = c}
             style={Styles.HeaderInput}
           />
+          <TouchableOpacity
+            onPress={this._onSettingsPress}
+            style={Styles.HeaderMoreButton}>
+            <Icon name="more-horiz" size={24} color={Colors.LightGray} />
+          </TouchableOpacity>
         </View>
-        <Animated.View style={[Styles.HeaderShadow, {
-          shadowOpacity: this._scrollAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, 1],
-            extrapolate: 'clamp',
-          }),
-        }]} />
+        <Animated.View
+          style={[
+            Styles.HeaderShadow,
+            {
+              shadowOpacity: this._scrollAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+                extrapolate: 'clamp',
+              }),
+            },
+          ]}
+        />
         <ScrollView
           showsVerticalScrollIndicator={false}
           onScroll={this._onScroll}
           scrollEventThrottle={16}
           style={Styles.Root}
           contentContainerStyle={Styles.ScrollInner}>
-          <View style={[Styles.Body, {
-            height: (this.props.trip.items.length + 2) * Sizes.RowHeight,
-          }]}>
+          <View
+            style={[
+              Styles.Body,
+              {
+                height: (this.props.trip.items.length + 2) * Sizes.RowHeight,
+              },
+            ]}>
             <View style={Styles.Row}>
               <View style={[Styles.ItemRow, Styles.AddItemRow]}>
                 <TextInput
                   placeholder="Add item"
-                  placeholderTextColor={this.props.trip.items.length === 0 ? Colors.Blue : Colors.LightGray}
+                  placeholderTextColor={
+                    this.props.trip.items.length === 0
+                      ? Colors.Blue
+                      : Colors.LightGray
+                  }
                   onChangeText={this._onChangeNewItemText}
                   onSubmitEditing={this._addItem}
                   value={this.state.newItemText}
@@ -177,10 +253,11 @@ class TripScreen extends React.Component {
                   ref={c => this._addInput = c}
                   style={Styles.AddInput}
                 />
-                {this.state.newItemText ?
-                  <TouchableOpacity onPress={this._onCancelAddPress}>
-                    <UIText color="lightgray" size="16">Cancel</UIText>
-                  </TouchableOpacity> : null}
+                {this.state.newItemText
+                  ? <TouchableOpacity onPress={this._onCancelAddPress}>
+                      <UIText color="lightgray" size="16">Cancel</UIText>
+                    </TouchableOpacity>
+                  : null}
               </View>
             </View>
             {emptyTripPrompt}
@@ -202,12 +279,20 @@ class TripScreen extends React.Component {
     );
   }
 }
-TripScreen = connect((state, ownProps) => ({
-  trip: trips.selectors.getTrip(state, ownProps.tripId),
-}), (dispatch, ownProps) => ({
-  setTripTitle: (title) => dispatch(trips.actions.setTripTitle(ownProps.tripId, title)),
-  setTripItems: (items) => dispatch(trips.actions.setTripItems(ownProps.tripId, items)),
-}))(TripScreen);
+TripScreen = compose(
+  connectActionSheet,
+  connect(
+    (state, ownProps) => ({
+      trip: trips.selectors.getTrip(state, ownProps.tripId),
+    }),
+    (dispatch, ownProps) => ({
+      setTripTitle: title =>
+        dispatch(trips.actions.setTripTitle(ownProps.tripId, title)),
+      setTripItems: items =>
+        dispatch(trips.actions.setTripItems(ownProps.tripId, items)),
+    })
+  )
+)(TripScreen);
 export default TripScreen;
 
 const Styles = StyleSheet.create({
@@ -235,6 +320,12 @@ const Styles = StyleSheet.create({
     fontSize: 24,
     height: 36,
     textAlign: 'center',
+  },
+  HeaderMoreButton: {
+    paddingRight: 16,
+    position: 'absolute',
+    right: 0,
+    top: 49,
   },
   Body: {
     marginBottom: 120,
