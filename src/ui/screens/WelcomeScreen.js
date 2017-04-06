@@ -121,6 +121,7 @@ const Styles = StyleSheet.create({
   ItemScroller: {
     flex: 1,
     justifyContent: 'center',
+    zIndex: -1,
   },
   ItemScrollerStrip: {
     flexDirection: 'row',
