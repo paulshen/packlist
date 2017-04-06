@@ -11,6 +11,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import "Amplitude.h"
 
 @implementation AppDelegate
 
@@ -31,6 +32,8 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  [[Amplitude instance] initializeApiKey:@"795768d69b064258bb17d64f3cce3566"];
   return YES;
 }
 

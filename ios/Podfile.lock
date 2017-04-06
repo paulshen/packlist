@@ -1,0 +1,12 @@
+PODS:
+  - Amplitude-iOS (3.14.1)
+
+DEPENDENCIES:
+  - Amplitude-iOS (~> 3.14.1)
+
+SPEC CHECKSUMS:
+  Amplitude-iOS: 4a3c8807b2ea5369dc11e87e23825bff01e5a922
+
+PODFILE CHECKSUM: 7fde3d537cac5d615963274b845b514dfb981dd8
+
+COCOAPODS: 1.2.0
