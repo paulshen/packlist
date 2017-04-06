@@ -10,22 +10,35 @@ function FirstChild(props) {
 class Wrapper extends React.Component {
   props: {
     style?: any,
+    fadeOnAppear: boolean,
+    initialMount: boolean,
     duration: number,
   };
   static defaultProps = {
+    fadeOnAppear: true,
     duration: 300,
   };
-  _anim = new Animated.Value(0);
+
+  constructor(props) {
+    super();
+    this._anim = new Animated.Value(
+      props.initialMount && !props.fadeOnAppear ? 1 : 0
+    );
+  }
 
   componentWillAppear(callback) {
-    this._fadeIn(callback);
+    if (!this.props.initialMount || this.props.fadeOnAppear) {
+      this._fadeIn(callback);
+    } else {
+      callback();
+    }
   }
 
   componentWillEnter(callback) {
     this._fadeIn(callback);
   }
 
-  _fadeIn = (callback) => {
+  _fadeIn = callback => {
     Animated.timing(this._anim, {
       toValue: 1,
       duration: this.props.duration,
@@ -46,18 +59,33 @@ class Wrapper extends React.Component {
   render() {
     let { duration, style, ...props } = this.props;
     return (
-      <Animated.View
-        {...props}
-        style={[{ opacity: this._anim }, style]}
-      />
+      <Animated.View {...props} style={[{ opacity: this._anim }, style]} />
     );
   }
 }
 
-export default function FadeChild({ children, style }: { children?: any, style?: any }) {
-  return (
-    <ReactTransitionGroup component={FirstChild}>
-      {React.Children.toArray(children).length > 0 ? <Wrapper style={style}>{children}</Wrapper> : null}
-    </ReactTransitionGroup>
-  );
+export default class FadeChild extends React.Component {
+  props: { children?: any };
+  state = {
+    initialMount: true,
+  };
+
+  componentDidMount() {
+    this.setState({
+      initialMount: false,
+    });
+  }
+  
+  render() {
+    let { children, ...props } = this.props;
+    return (
+      <ReactTransitionGroup component={FirstChild}>
+        {React.Children.toArray(children).length > 0
+          ? <Wrapper {...props} initialMount={this.state.initialMount}>
+              {children}
+            </Wrapper>
+          : null}
+      </ReactTransitionGroup>
+    );
+  }
 }
