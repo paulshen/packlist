@@ -211,7 +211,7 @@ class NavMenu extends React.Component {
       `Are you sure you want to delete ${this.props.getTripName(tripId) || 'this list'}?`,
       null,
       [
-        { text: 'No' },
+        { text: 'Cancel' },
         {
           text: 'Yes',
           onPress: () => {
@@ -324,7 +324,7 @@ class NavMenu extends React.Component {
                 onPress={this.props.showWelcome}
                 style={Styles.AboutLink}>
                 <UIText color="white" size="12">
-                  See that welcome screen again
+                  See the welcome screen again
                 </UIText>
               </TouchableOpacity>
               <TouchableOpacity
@@ -415,7 +415,7 @@ const Styles = StyleSheet.create({
     flex: 1,
   },
   MenuItemName: {
-    paddingHorizontal: 8,
+    paddingHorizontal: 12,
     paddingTop: 24,
     textAlign: 'center',
   },

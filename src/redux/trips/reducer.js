@@ -8,11 +8,11 @@ export default function trips(state: any, action: any) {
   if (typeof state === 'undefined') {
     state = OrderedMap({
       [guid()]: {
-        name: 'Hiking',
+        name: 'Hiking Example',
         items: ['Hat', 'Water', 'Snacks', 'Hiking poles', 'Hiking boots'].map((item, i) => ({ id: i + 1, text: item })),
       },
       [guid()]: {
-        name: 'Travel',
+        name: 'Travel Example',
         items: ['Driver license', 'Phone charger', 'Toothpaste', 'Toothbrush', 'Camera', 'Camera charger', 'Contacts', 'Kindle'].map((item, i) => ({ id: i + 1, text: item })),
       },
     });

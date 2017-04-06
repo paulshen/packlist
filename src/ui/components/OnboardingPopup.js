@@ -81,7 +81,7 @@ const Styles = StyleSheet.create({
     position: 'absolute',
   },
   Root: {
-    backgroundColor: Colors.Blue,
+    backgroundColor: `${Colors.Blue}F8`,
     borderRadius: 8,
     left: 20,
     paddingBottom: 20,
@@ -92,8 +92,8 @@ const Styles = StyleSheet.create({
     shadowOffset: { x: 0, y: 6 },
     shadowOpacity: 0.1,
     shadowRadius: 16,
-    top: Sizes.RowHeight * 2.5,
-    width: 250,
+    top: Sizes.RowHeight * 3.5,
+    width: 260,
   },
   Note: {
     marginBottom: 12,

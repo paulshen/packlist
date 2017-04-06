@@ -238,7 +238,7 @@ class TripScreen extends React.Component {
               `Are you sure you want to delete ${this.props.trip.name || 'this list'}?`,
               null,
               [
-                { text: 'No' },
+                { text: 'Cancel' },
                 {
                   text: 'Yes',
                   onPress: () => {
