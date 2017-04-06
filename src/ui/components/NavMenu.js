@@ -121,10 +121,12 @@ function MenuItem(
         onLongPress={onLongPress}
         activeOpacity={0.6}
         style={Styles.MenuItemTouchable}>
-        <UIText size="18" weight="medium" style={Styles.MenuItemName}>{trip.name || 'Untitled'}</UIText>
+        <UIText size="18" weight="medium" style={Styles.MenuItemName}>
+          {trip.name || 'Untitled'}
+        </UIText>
         <View style={Styles.MenuItemBottom}>
           {trip.items
-            ? <View style={{alignItems: 'center'}}>
+            ? <View style={{ alignItems: 'center' }}>
                 <UIText color="lightgray" size="12" weight="light">
                   {trip.items.length} item{trip.items.length !== 1 ? 's' : ''}
                 </UIText>
@@ -132,7 +134,11 @@ function MenuItem(
                   {trip.items.filter(i => i.checked).length} checked
                 </UIText>
               </View>
-            : <UIText color="lightgray" size="48" weight="light" style={Styles.MenuItemPlus}>
+            : <UIText
+                color="lightgray"
+                size="48"
+                weight="light"
+                style={Styles.MenuItemPlus}>
                 +
               </UIText>}
         </View>
@@ -230,7 +236,10 @@ class NavMenu extends React.Component {
     let { trips } = this.props;
     return (
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
-        <StatusBar barStyle={this.state.open ? 'light-content' : 'default'} animated={true} />
+        <StatusBar
+          barStyle={this.state.open ? 'light-content' : 'default'}
+          animated={true}
+        />
         <Animated.View
           style={[
             Styles.Background,
@@ -308,11 +317,21 @@ class NavMenu extends React.Component {
               ])
               .toArray()}
             <View style={Styles.AboutSection}>
-              <TouchableOpacity activeOpacity={0.6} onPress={this.props.showWelcome}>
-                <UIText color="white" size="12">Show me that welcome screen again!</UIText>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={this.props.showWelcome}
+                style={Styles.AboutLink}>
+                <UIText color="white" size="12">
+                  See that welcome screen again
+                </UIText>
               </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.6} onPress={() => Linking.openURL('https://twitter.com/_paulshen')}>
-                <UIText color="white" size="12">Tweet feedback @_paulshen</UIText>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => Linking.openURL('https://twitter.com/_paulshen')}
+                style={Styles.AboutLink}>
+                <UIText color="white" size="12">
+                  Tweet feedback @_paulshen
+                </UIText>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -362,6 +381,11 @@ const Styles = StyleSheet.create({
     right: ButtonPosition.right,
     width: ButtonPosition.width,
   },
+  ButtonIconLine: {
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    height: 2,
+    width: 14,
+  },
   Menu: {
     ...StyleSheet.absoluteFillObject,
   },
@@ -404,12 +428,10 @@ const Styles = StyleSheet.create({
   AboutSection: {
     alignItems: 'flex-start',
     marginVertical: 40,
-    opacity: 0.5,
+    opacity: 0.4,
     width: WindowWidth,
   },
-  ButtonIconLine: {
-    backgroundColor: 'rgba(255,255,255,0.8)',
-    height: 2,
-    width: 14,
+  AboutLink: {
+    paddingVertical: 2,
   },
 });

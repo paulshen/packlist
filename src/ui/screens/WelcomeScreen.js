@@ -76,7 +76,7 @@ export default class WelcomeScreen extends React.Component {
             Packlist
           </UIText>
           <View style={Styles.TopDivider} />
-          <UIText color="white" size="14" style={Styles.TopText}>
+          <UIText color="white" size="16" style={Styles.TopText}>
             {'A simple checklist\nfor stress-free travels'}
           </UIText>
         </View>
@@ -86,7 +86,7 @@ export default class WelcomeScreen extends React.Component {
           onPress={this.props.dismiss}
           style={Styles.Continue}>
           <View>
-            <UIText color="white" size="14" weight="medium">Continue</UIText>
+            <UIText color="white" size="16" weight="medium">Continue</UIText>
           </View>
         </TouchableHighlight>
       </View>
@@ -101,8 +101,7 @@ const Styles = StyleSheet.create({
   },
   Top: {
     alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
+    paddingTop: 60,
   },
   TopDivider: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
@@ -115,7 +114,8 @@ const Styles = StyleSheet.create({
     textAlign: 'center',
   },
   ItemScroller: {
-    height: 400,
+    flex: 1,
+    justifyContent: 'center',
   },
   ItemScrollerStrip: {
     flexDirection: 'row',
