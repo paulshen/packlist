@@ -13,6 +13,7 @@ import {
   TextInput,
   TouchableHighlight,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { compose } from 'redux';
@@ -264,89 +265,91 @@ class TripScreen extends React.Component {
     }
 
     return (
-      <View style={Styles.Root}>
-        <View style={Styles.Header}>
-          <TextInput
-            value={this.props.trip.name}
-            onChangeText={this._onChangeTitleText}
-            placeholder="Name your list"
-            ref={c => this._titleInput = c}
-            style={Styles.HeaderInput}
-          />
-          <TouchableOpacity
-            onPress={this._onSettingsPress}
-            style={Styles.HeaderMoreButton}>
-            <Icon name="more-horiz" size={24} color={Colors.LightGray} />
-          </TouchableOpacity>
-        </View>
-        <Animated.View
-          style={[
-            Styles.HeaderShadow,
-            {
-              shadowOpacity: this._scrollAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 1],
-                extrapolate: 'clamp',
-              }),
-            },
-          ]}
-        />
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={Styles.Root}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            onScroll={this._onScroll}
-            scrollEventThrottle={16}
-            style={Styles.Root}
-            contentContainerStyle={Styles.ScrollInner}>
-            <View
-              style={[
-                Styles.Body,
-                {
-                  height: (this.props.trip.items.length + 1) * Sizes.RowHeight,
-                },
-              ]}>
-              <View style={Styles.Row}>
-                <View style={[Styles.ItemRow, Styles.AddItemRow]}>
-                  <TextInput
-                    placeholder="Add item"
-                    placeholderTextColor={
-                      this.props.trip.items.length === 0
-                        ? Colors.Blue
-                        : Colors.LightGray
-                    }
-                    onChangeText={this._onChangeNewItemText}
-                    onSubmitEditing={this._addItem}
-                    value={this.state.newItemText}
-                    returnKeyType="go"
-                    enablesReturnKeyAutomatically={true}
-                    ref={c => this._addInput = c}
-                    style={Styles.AddInput}
-                  />
-                  {this.state.newItemText
-                    ? <TouchableOpacity onPress={this._onCancelAddPress}>
-                        <UIText color="lightgray" size="16">Cancel</UIText>
-                      </TouchableOpacity>
-                    : null}
-                </View>
-              </View>
-              {this.props.trip.items.map((item, i) => {
-                let y = (i + 1) * Sizes.RowHeight;
-                return (
-                  <AnimatedRow y={y} key={item.id}>
-                    <ItemRow
-                      item={item}
-                      onPress={() => this._onItemPress(item)}
-                      onDelete={() => this._deleteItem(item)}
+          <View style={Styles.Header}>
+            <TextInput
+              value={this.props.trip.name}
+              onChangeText={this._onChangeTitleText}
+              placeholder="Name your list"
+              ref={c => this._titleInput = c}
+              style={Styles.HeaderInput}
+            />
+            <TouchableOpacity
+              onPress={this._onSettingsPress}
+              style={Styles.HeaderMoreButton}>
+              <Icon name="more-horiz" size={24} color={Colors.LightGray} />
+            </TouchableOpacity>
+          </View>
+          <Animated.View
+            style={[
+              Styles.HeaderShadow,
+              {
+                shadowOpacity: this._scrollAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 1],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ]}
+          />
+          <View style={Styles.Root}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              onScroll={this._onScroll}
+              scrollEventThrottle={16}
+              style={Styles.Root}
+              contentContainerStyle={Styles.ScrollInner}>
+              <View
+                style={[
+                  Styles.Body,
+                  {
+                    height: (this.props.trip.items.length + 1) * Sizes.RowHeight,
+                  },
+                ]}>
+                <View style={Styles.Row}>
+                  <View style={[Styles.ItemRow, Styles.AddItemRow]}>
+                    <TextInput
+                      placeholder="Add item"
+                      placeholderTextColor={
+                        this.props.trip.items.length === 0
+                          ? Colors.Blue
+                          : Colors.LightGray
+                      }
+                      onChangeText={this._onChangeNewItemText}
+                      onSubmitEditing={this._addItem}
+                      value={this.state.newItemText}
+                      returnKeyType="go"
+                      enablesReturnKeyAutomatically={true}
+                      ref={c => this._addInput = c}
+                      style={Styles.AddInput}
                     />
-                  </AnimatedRow>
-                );
-              })}
-            </View>
-            {emptyTripPrompt}
-          </ScrollView>
-          <OnboardingPopup />
+                    {this.state.newItemText
+                      ? <TouchableOpacity onPress={this._onCancelAddPress}>
+                          <Icon name="close" size={24} color={Colors.VeryLightGray} />
+                        </TouchableOpacity>
+                      : null}
+                  </View>
+                </View>
+                {this.props.trip.items.map((item, i) => {
+                  let y = (i + 1) * Sizes.RowHeight;
+                  return (
+                    <AnimatedRow y={y} key={item.id}>
+                      <ItemRow
+                        item={item}
+                        onPress={() => this._onItemPress(item)}
+                        onDelete={() => this._deleteItem(item)}
+                      />
+                    </AnimatedRow>
+                  );
+                })}
+              </View>
+              {emptyTripPrompt}
+            </ScrollView>
+            <OnboardingPopup />
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
@@ -446,7 +449,7 @@ const Styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     flexDirection: 'row',
     paddingLeft: 30,
-    paddingRight: 20,
+    paddingRight: 24,
   },
   AddInput: {
     ...Fonts.Regular,
