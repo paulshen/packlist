@@ -4,11 +4,32 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import FadeChild from './FadeChild';
 import { Colors, Fonts, Sizes } from '../Constants';
 import { UIText } from './Core';
 import user from '../../redux/user';
 
-class OnboardingPopup extends React.Component {
+function OnboardingPopup({ onClose }: { onClose: Function }) {
+  return (
+    <View style={Styles.Root}>
+      <UIText color="white" size="10" weight="semibold" style={Styles.Note}>
+        NOTE!
+      </UIText>
+      <UIText color="white" size="14" style={Styles.Row}>
+        Tap item to check
+      </UIText>
+      <UIText color="white" size="14">Swipe to delete</UIText>
+      <TouchableOpacity
+        onPress={onClose}
+        activeOpacity={0.6}
+        style={Styles.Close}>
+        <Icon name="close" color={Colors.White} size={24} />
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+class OnboardingPopupContainer extends React.Component {
   props: {
     currentTrip: ?Object,
     hasDismissedOnboardingPopup: boolean,
@@ -21,31 +42,34 @@ class OnboardingPopup extends React.Component {
 
   render() {
     let { currentTrip, hasDismissedOnboardingPopup } = this.props;
-    if (!currentTrip || currentTrip.items.length === 0 || hasDismissedOnboardingPopup) {
-      return null;
-    }
+    let showPopup = currentTrip &&
+      currentTrip.items.length > 0 &&
+      !hasDismissedOnboardingPopup;
 
     return (
-      <View style={Styles.Root}>
-        <UIText color="white" size="10" weight="semibold" style={Styles.Note}>NOTE!</UIText>
-        <UIText color="white" size="14" style={Styles.Row}>Tap item to check</UIText>
-        <UIText color="white" size="14">Swipe to delete</UIText>
-        <TouchableOpacity onPress={this._onClose} activeOpacity={0.6} style={Styles.Close}>
-          <Icon name="close" color={Colors.White} size={24} />
-        </TouchableOpacity>
-      </View>
+      <FadeChild duration={150} style={Styles.FadeWrapper}>
+        {showPopup && <OnboardingPopup onClose={this._onClose} />}
+      </FadeChild>
     );
   }
 }
-OnboardingPopup = connect((state) => ({
-  hasDismissedOnboardingPopup: user.selectors.hasDismissedOnboardingPopup(state),
-  currentTrip: user.selectors.getSelectedTrip(state),
-}), (dispatch) => ({
-  close: () => dispatch(user.actions.dismissOnboardingPopup()),
-}))(OnboardingPopup);
-export default OnboardingPopup;
+OnboardingPopupContainer = connect(
+  state => ({
+    hasDismissedOnboardingPopup: user.selectors.hasDismissedOnboardingPopup(
+      state
+    ),
+    currentTrip: user.selectors.getSelectedTrip(state),
+  }),
+  dispatch => ({
+    close: () => dispatch(user.actions.dismissOnboardingPopup()),
+  })
+)(OnboardingPopupContainer);
+export default OnboardingPopupContainer;
 
 const Styles = StyleSheet.create({
+  FadeWrapper: {
+    position: 'absolute',
+  },
   Root: {
     backgroundColor: Colors.Blue,
     borderRadius: 8,

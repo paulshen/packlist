@@ -11,6 +11,8 @@
 		"@expo/react-native-action-sheet": "^0.3.1",
 		"immutable": "^3.8.1",
 		"react": "~15.4.0-rc.4",
+		"react-addons-transition-group": "^15.4.2",
+		"react-dom": "^15.4.2",
 		"react-native": "0.42.3",
 		"react-native-interactable": "https://github.com/wix/react-native-interactable.git#2aa2e5e",
 		"react-native-invertible-scroll-view": "^1.0.0",
