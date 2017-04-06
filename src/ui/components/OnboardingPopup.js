@@ -8,25 +8,35 @@ import FadeChild from './FadeChild';
 import { Colors, Fonts, Sizes } from '../Constants';
 import { UIText } from './Core';
 import user from '../../redux/user';
+import Amplitude from '../../Amplitude';
 
-function OnboardingPopup({ onClose }: { onClose: Function }) {
-  return (
-    <View style={Styles.Root}>
-      <UIText color="white" size="10" weight="semibold" style={Styles.Note}>
-        NOTE!
-      </UIText>
-      <UIText color="white" size="14" style={Styles.Row}>
-        Tap item to check
-      </UIText>
-      <UIText color="white" size="14">Swipe to delete</UIText>
-      <TouchableOpacity
-        onPress={onClose}
-        activeOpacity={0.6}
-        style={Styles.Close}>
-        <Icon name="close" color={Colors.White} size={24} />
-      </TouchableOpacity>
-    </View>
-  );
+class OnboardingPopup extends React.Component {
+  props: { onClose: Function };
+
+  componentDidMount() {
+    Amplitude.logEvent('Onboarding Popup Dismissed');
+  }
+
+  render() {
+    let { onClose } = this.props;
+    return (
+      <View style={Styles.Root}>
+        <UIText color="white" size="10" weight="semibold" style={Styles.Note}>
+          NOTE!
+        </UIText>
+        <UIText color="white" size="14" style={Styles.Row}>
+          Tap item to check
+        </UIText>
+        <UIText color="white" size="14">Swipe to delete</UIText>
+        <TouchableOpacity
+          onPress={onClose}
+          activeOpacity={0.6}
+          style={Styles.Close}>
+          <Icon name="close" color={Colors.White} size={24} />
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
 class OnboardingPopupContainer extends React.Component {

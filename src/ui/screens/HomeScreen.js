@@ -10,6 +10,7 @@ import { StoreReyhdrated } from '../../redux';
 import FadeChild from '../components/FadeChild';
 import { Colors } from '../Constants';
 import user from '../../redux/user';
+import Amplitude from '../../Amplitude';
 
 class HomeScreen extends React.Component {
   props: {
@@ -32,6 +33,7 @@ class HomeScreen extends React.Component {
   _onDismissWelcome = () => {
     this.setState({ showWelcome: false });
     this.props.dismissWelcome();
+    Amplitude.logEvent('Welcome Screen Dismissed');
   };
 
   render() {

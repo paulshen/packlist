@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { Colors, Sizes } from '../Constants';
 import { UIText } from './Core';
 import trips from '../../redux/trips';
+import Amplitude from '../../Amplitude';
 
 function Row({ children, onPress }) {
   return (
@@ -33,6 +34,9 @@ class EmptyTripPrompt extends React.Component {
         checked: false,
       }))
     );
+    Amplitude.logEvent('Trip Items Copied', {
+      tripId: this.props.tripId,
+    });
   };
 
   render() {

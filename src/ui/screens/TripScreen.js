@@ -28,6 +28,7 @@ import EmptyTripPrompt from '../components/EmptyTripPrompt';
 import OnboardingPopup from '../components/OnboardingPopup';
 import trips from '../../redux/trips';
 import user from '../../redux/user';
+import Amplitude from '../../Amplitude';
 
 type Item = { id: number, checked?: boolean, text: string };
 
@@ -152,6 +153,9 @@ class TripScreen extends React.Component {
     if (!this.props.trip.name) {
       this._titleInput.focus();
     }
+    Amplitude.logEvent('Viewed Trip Screen', {
+      tripId: this.props.tripId,
+    });
   }
 
   _onChangeTitleText = text => {
@@ -178,6 +182,7 @@ class TripScreen extends React.Component {
       newItemText: '',
     });
     requestAnimationFrame(() => this._addInput.focus());
+    Amplitude.logEvent('Trip Item Added');
   };
 
   _onCancelAddPress = () => {
@@ -191,10 +196,16 @@ class TripScreen extends React.Component {
     let items = [...this.props.trip.items];
     items[items.indexOf(item)] = { ...item, checked: !item.checked };
     this.props.setTripItems(items);
+    if (!item.checked) {
+      Amplitude.logEvent('Trip Item Checked');
+    } else {
+      Amplitude.logEvent('Trip Item Unchecked');
+    }
   };
 
   _deleteItem = (item: Item) => {
     this.props.setTripItems(this.props.trip.items.filter(i => i !== item));
+    Amplitude.logEvent('Trip Item Deleted');
   };
 
   _onScroll = e => {
@@ -217,6 +228,10 @@ class TripScreen extends React.Component {
                 checked: false,
               }))
             );
+            Amplitude.logEvent('Trip Items Unchecked', {
+              tripId: this.props.tripId,
+              numItems: this.props.trip.items.length,
+            });
             break;
           case 1:
             Alert.alert(
@@ -229,6 +244,9 @@ class TripScreen extends React.Component {
                   onPress: () => {
                     this.props.selectTrip(null);
                     this.props.removeTrip(this.props.tripId);
+                    Amplitude.logEvent('Trip Deleted', {
+                      tripId: this.props.tripId,
+                    });
                   },
                 },
               ]

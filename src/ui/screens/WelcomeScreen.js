@@ -17,6 +17,7 @@ import {
 
 import { Colors, Fonts, Sizes } from '../Constants';
 import { UIText } from '../components/Core';
+import Amplitude from '../../Amplitude';
 
 const ItemScrollerImageWidth = 500;
 class ItemScroller extends React.Component {
@@ -66,6 +67,10 @@ export default class WelcomeScreen extends React.Component {
   props: {
     dismiss: () => void,
   };
+
+  componentDidMount() {
+    Amplitude.logEvent('Viewed Welcome Screen');
+  }
 
   render() {
     return (

@@ -18,6 +18,7 @@ import { Colors, Sizes } from '../Constants';
 import { UIText } from './Core';
 import trips from '../../redux/trips';
 import user from '../../redux/user';
+import Amplitude from '../../Amplitude';
 
 const WindowHeight = Dimensions.get('window').height;
 const WindowWidth = Dimensions.get('window').width;
@@ -188,6 +189,7 @@ class NavMenu extends React.Component {
         toValue: this.state.open ? 1 : 0,
         duration: AnimationDuration,
       }).start();
+      Amplitude.logEvent(this.state.open ? 'NavMenu Opened' : 'NavMenu Closed');
     }
   }
 

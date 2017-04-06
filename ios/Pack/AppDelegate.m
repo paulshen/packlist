@@ -33,7 +33,10 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   
+  [[Amplitude instance] setTrackingSessionEvents:YES];
   [[Amplitude instance] initializeApiKey:@"795768d69b064258bb17d64f3cce3566"];
+  [[Amplitude instance] setEventUploadThreshold: 10];
+  [[Amplitude instance] setEventUploadPeriodSeconds: 10];
   return YES;
 }
 
