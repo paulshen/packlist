@@ -4,6 +4,7 @@ import * as t from './actionTypes';
 const InitialState = {
   selectedTripId: null,
   hasDismissedWelcome: false,
+  hasDismissedOnboardingPopup: false,
 };
 
 export default function user(state: any = InitialState, action: any) {
@@ -17,6 +18,11 @@ export default function user(state: any = InitialState, action: any) {
     return {
       ...state,
       hasDismissedWelcome: true,
+    };
+  case t.DISMISS_ONBOARDING_POPUP:
+    return {
+      ...state,
+      hasDismissedOnboardingPopup: true,
     };
   default:
     return state;

@@ -25,6 +25,7 @@ import { Colors, Fonts, Sizes } from '../Constants';
 import { UIText } from '../components/Core';
 import AnimatedRow from '../components/AnimatedRow';
 import EmptyTripPrompt from '../components/EmptyTripPrompt';
+import OnboardingPopup from '../components/OnboardingPopup';
 import trips from '../../redux/trips';
 import user from '../../redux/user';
 
@@ -241,9 +242,7 @@ class TripScreen extends React.Component {
   render() {
     let emptyTripPrompt;
     if (this.props.trip.items.length === 0) {
-      emptyTripPrompt = (
-        <EmptyTripPrompt tripId={this.props.tripId} />
-      );
+      emptyTripPrompt = <EmptyTripPrompt tripId={this.props.tripId} />;
     }
 
     return (
@@ -274,58 +273,61 @@ class TripScreen extends React.Component {
             },
           ]}
         />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          onScroll={this._onScroll}
-          scrollEventThrottle={16}
-          style={Styles.Root}
-          contentContainerStyle={Styles.ScrollInner}>
-          <View
-            style={[
-              Styles.Body,
-              {
-                height: (this.props.trip.items.length + 1) * Sizes.RowHeight,
-              },
-            ]}>
-            <View style={Styles.Row}>
-              <View style={[Styles.ItemRow, Styles.AddItemRow]}>
-                <TextInput
-                  placeholder="Add item"
-                  placeholderTextColor={
-                    this.props.trip.items.length === 0
-                      ? Colors.Blue
-                      : Colors.LightGray
-                  }
-                  onChangeText={this._onChangeNewItemText}
-                  onSubmitEditing={this._addItem}
-                  value={this.state.newItemText}
-                  returnKeyType="go"
-                  enablesReturnKeyAutomatically={true}
-                  ref={c => this._addInput = c}
-                  style={Styles.AddInput}
-                />
-                {this.state.newItemText
-                  ? <TouchableOpacity onPress={this._onCancelAddPress}>
-                      <UIText color="lightgray" size="16">Cancel</UIText>
-                    </TouchableOpacity>
-                  : null}
-              </View>
-            </View>
-            {this.props.trip.items.map((item, i) => {
-              let y = (i + 1) * Sizes.RowHeight;
-              return (
-                <AnimatedRow y={y} key={item.id}>
-                  <ItemRow
-                    item={item}
-                    onPress={() => this._onItemPress(item)}
-                    onDelete={() => this._deleteItem(item)}
+        <View style={Styles.Root}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            onScroll={this._onScroll}
+            scrollEventThrottle={16}
+            style={Styles.Root}
+            contentContainerStyle={Styles.ScrollInner}>
+            <View
+              style={[
+                Styles.Body,
+                {
+                  height: (this.props.trip.items.length + 1) * Sizes.RowHeight,
+                },
+              ]}>
+              <View style={Styles.Row}>
+                <View style={[Styles.ItemRow, Styles.AddItemRow]}>
+                  <TextInput
+                    placeholder="Add item"
+                    placeholderTextColor={
+                      this.props.trip.items.length === 0
+                        ? Colors.Blue
+                        : Colors.LightGray
+                    }
+                    onChangeText={this._onChangeNewItemText}
+                    onSubmitEditing={this._addItem}
+                    value={this.state.newItemText}
+                    returnKeyType="go"
+                    enablesReturnKeyAutomatically={true}
+                    ref={c => this._addInput = c}
+                    style={Styles.AddInput}
                   />
-                </AnimatedRow>
-              );
-            })}
-          </View>
-          {emptyTripPrompt}
-        </ScrollView>
+                  {this.state.newItemText
+                    ? <TouchableOpacity onPress={this._onCancelAddPress}>
+                        <UIText color="lightgray" size="16">Cancel</UIText>
+                      </TouchableOpacity>
+                    : null}
+                </View>
+              </View>
+              {this.props.trip.items.map((item, i) => {
+                let y = (i + 1) * Sizes.RowHeight;
+                return (
+                  <AnimatedRow y={y} key={item.id}>
+                    <ItemRow
+                      item={item}
+                      onPress={() => this._onItemPress(item)}
+                      onDelete={() => this._deleteItem(item)}
+                    />
+                  </AnimatedRow>
+                );
+              })}
+            </View>
+            {emptyTripPrompt}
+          </ScrollView>
+          <OnboardingPopup />
+        </View>
       </View>
     );
   }

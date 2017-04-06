@@ -12,6 +12,7 @@ const SUPPORTED_COLORS = {
 };
 
 const SUPPORTED_FONT_SIZES = {
+  '10': 10,
   '12': 12,
   '14': 14,
   '16': 16,

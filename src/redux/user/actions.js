@@ -13,3 +13,9 @@ export function dismissWelcome() {
     type: t.DISMISS_WELCOME,
   };
 }
+
+export function dismissOnboardingPopup() {
+  return {
+    type: t.DISMISS_ONBOARDING_POPUP,
+  };
+}
