@@ -125,6 +125,7 @@ const Styles = StyleSheet.create({
   },
   ItemScrollerStrip: {
     flexDirection: 'row',
+    width: 500 * 2,
   },
   Continue: {
     alignItems: 'center',
