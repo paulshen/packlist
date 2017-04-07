@@ -1,6 +1,7 @@
 package com.pack;
 
 import com.facebook.react.ReactActivity;
+import com.amplitude.api.Amplitude;
 
 public class MainActivity extends ReactActivity {
 
@@ -11,5 +12,9 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "Pack";
+    }
+
+    public void onCreate() {
+        Amplitude.getInstance().initialize(this, "795768d69b064258bb17d64f3cce3566");
     }
 }
