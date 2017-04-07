@@ -8,6 +8,7 @@ import {
   Dimensions,
   Image,
   Keyboard,
+  Platform,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -231,7 +232,7 @@ class TripScreen extends React.Component {
             );
             Amplitude.logEvent('Trip Items Unchecked', {
               tripId: this.props.tripId,
-              numItems: this.props.trip.items.length,
+              numItems: `${this.props.trip.items.length}`,
             });
             break;
           case 1:
@@ -273,6 +274,7 @@ class TripScreen extends React.Component {
               onChangeText={this._onChangeTitleText}
               placeholder="Name your list"
               ref={c => this._titleInput = c}
+              underlineColorAndroid="transparent"
               style={Styles.HeaderInput}
             />
             <TouchableOpacity
@@ -321,6 +323,7 @@ class TripScreen extends React.Component {
                       value={this.state.newItemText}
                       returnKeyType="go"
                       enablesReturnKeyAutomatically={true}
+                      underlineColorAndroid="transparent"
                       ref={c => this._addInput = c}
                       style={Styles.AddInput}
                     />
@@ -393,7 +396,9 @@ const Styles = StyleSheet.create({
   HeaderInput: {
     ...Fonts.Medium,
     fontSize: 24,
-    height: 36,
+    ...Platform.OS === 'ios' ? {
+      height: 36,
+    }: null,
     textAlign: 'center',
   },
   HeaderMoreButton: {
