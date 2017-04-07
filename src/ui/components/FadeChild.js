@@ -75,7 +75,7 @@ export default class FadeChild extends React.Component {
       initialMount: false,
     });
   }
-  
+
   render() {
     let { children, ...props } = this.props;
     return (

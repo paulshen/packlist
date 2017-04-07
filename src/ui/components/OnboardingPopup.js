@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -56,6 +56,9 @@ class OnboardingPopupContainer extends React.Component {
       currentTrip.items.length > 0 &&
       !hasDismissedOnboardingPopup;
 
+    if (Platform.OS === 'android') {
+      return showPopup && <OnboardingPopup onClose={this._onClose} />;
+    }
     return (
       <FadeChild duration={150} style={Styles.FadeWrapper}>
         {showPopup && <OnboardingPopup onClose={this._onClose} />}

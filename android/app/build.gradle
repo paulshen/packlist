@@ -87,7 +87,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.pack"
+        applicationId "com.bypaulshen.packlist"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
