@@ -1,4 +1,4 @@
-package com.pack;
+package com.bypaulshen.packlist;
 
 import android.app.Application;
 

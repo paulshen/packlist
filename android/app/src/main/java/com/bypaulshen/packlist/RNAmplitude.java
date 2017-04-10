@@ -1,4 +1,4 @@
-package com.pack;
+package com.bypaulshen.packlist;
 import com.amplitude.api.Amplitude;
 import android.app.Activity;
 import android.app.Application;

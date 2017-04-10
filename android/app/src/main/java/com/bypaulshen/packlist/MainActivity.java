@@ -1,4 +1,4 @@
-package com.pack;
+package com.bypaulshen.packlist;
 
 import com.facebook.react.ReactActivity;
 import com.amplitude.api.Amplitude;
