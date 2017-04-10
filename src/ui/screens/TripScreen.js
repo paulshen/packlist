@@ -348,8 +348,9 @@ class TripScreen extends React.Component {
                 })}
               </View>
               {emptyTripPrompt}
+              {Platform.OS === 'android' ? <OnboardingPopup /> : null}
             </ScrollView>
-            <OnboardingPopup />
+            {Platform.OS === 'ios' ? <OnboardingPopup /> : null}
           </View>
         </View>
       </TouchableWithoutFeedback>
